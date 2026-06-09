@@ -21,6 +21,7 @@ function parseFormData(formData: FormData) {
     quoteId: raw.quoteId || undefined,
     endDate: raw.endDate || undefined,
     ownerId: raw.ownerId || undefined,
+    contractDate: raw.contractDate || new Date().toISOString().slice(0, 10),
     lineItems,
     deviceIds,
   });

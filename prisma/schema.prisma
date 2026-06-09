@@ -718,6 +718,7 @@ model Contract {
   status     ContractStatus @default(DRAFT)
   currency   Currency       @default(TRY)
 
+  contractDate      DateTime? @map("contract_date") @db.Date
   startDate         DateTime  @map("start_date") @db.Date
   endDate           DateTime? @map("end_date") @db.Date
   signedAt          DateTime? @map("signed_at") @db.Timestamptz(6)

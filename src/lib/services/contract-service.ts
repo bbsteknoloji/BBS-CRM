@@ -488,6 +488,7 @@ async function buildTemplateDataForContract(
     where: { id: contractId },
     select: {
       number: true,
+      contractDate: true,
       signedAt: true,
       createdAt: true,
       startDate: true,
@@ -580,6 +581,7 @@ export async function createContract(
         title: input.title.trim(),
         status: "DRAFT",
         currency: input.currency,
+        contractDate: new Date(input.contractDate),
         startDate: new Date(input.startDate),
         endDate: input.endDate ? new Date(input.endDate) : null,
         autoRenew: input.autoRenew ?? false,

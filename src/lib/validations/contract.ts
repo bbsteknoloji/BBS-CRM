@@ -26,6 +26,7 @@ export const contractFormSchema = z
     title: z.string().min(2, "Başlık gerekli").max(255),
     customerId: z.string().uuid("Müşteri seçin"),
     quoteId: z.string().uuid().optional().or(z.literal("")),
+    contractDate: z.string().min(1, "Sözleşme tarihi gerekli"),
     startDate: z.string().min(1, "Başlangıç tarihi gerekli"),
     endDate: z.string().optional().or(z.literal("")),
     renewalNoticeDays: z.coerce

@@ -60,6 +60,7 @@ function formatInvoiceNumber(invoiceNumber: string | null | undefined): string {
 
 export function buildContractTemplatePlaceholders(input: {
   number: string;
+  contractDate: Date | null;
   signedAt: Date | null;
   createdAt: Date;
   startDate: Date;
@@ -94,7 +95,7 @@ export function buildContractTemplatePlaceholders(input: {
     input.customer.contacts.find((c) => c.isPrimary) ??
     input.customer.contacts[0];
 
-  const contractDate = input.signedAt ?? input.createdAt;
+  const contractDate = input.contractDate ?? input.signedAt ?? input.createdAt;
 
   return {
     contractNumber: input.number,
@@ -118,6 +119,7 @@ export function buildContractTemplatePlaceholders(input: {
 
 const CONTRACT_TEMPLATE_SELECT = {
   number: true,
+  contractDate: true,
   signedAt: true,
   createdAt: true,
   startDate: true,

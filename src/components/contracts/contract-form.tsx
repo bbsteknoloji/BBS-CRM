@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState, useTransition } from "react";
+import { useCallback, useEffect, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -53,6 +53,20 @@ export function ContractForm({
     setDeviceIds(ids);
   }, []);
   const d = defaultValues ?? {};
+
+  const today = new Date().toISOString().slice(0, 10);
+  const [contractDate, setContractDate] = useState<string>(
+    (d as { contractDate?: string }).contractDate ?? today
+  );
+  const [startDateLinked, setStartDateLinked] = useState(true);
+  const [startDate, setStartDate] = useState<string>(
+    d.startDate ?? today
+  );
+
+  // Checkbox işaretliyken startDate, contractDate ile senkron
+  useEffect(() => {
+    if (startDateLinked) setStartDate(contractDate);
+  }, [startDateLinked, contractDate]);
 
   const filteredQuotes = customerId
     ? quotes.filter((q) => q.customerId === customerId)
@@ -126,16 +140,49 @@ export function ContractForm({
             ))}
           </select>
         </div>
+        {/* Sözleşme Tarihi */}
+        <div className="space-y-2">
+          <Label htmlFor="contractDate">Sözleşme tarihi *</Label>
+          <Input
+            id="contractDate"
+            name="contractDate"
+            type="date"
+            required
+            value={contractDate}
+            onChange={(e) => setContractDate(e.target.value)}
+          />
+        </div>
+
+        {/* Başlangıç Tarihi + Checkbox */}
         <div className="space-y-2">
           <Label htmlFor="startDate">Başlangıç tarihi *</Label>
+          <div className="flex items-center gap-2 mb-1">
+            <input
+              type="checkbox"
+              id="startDateLinked"
+              checked={startDateLinked}
+              onChange={(e) => setStartDateLinked(e.target.checked)}
+              className="h-4 w-4 rounded border"
+            />
+            <label
+              htmlFor="startDateLinked"
+              className="text-xs text-muted-foreground font-normal cursor-pointer select-none"
+            >
+              Sözleşme tarihi ile aynı
+            </label>
+          </div>
           <Input
             id="startDate"
             name="startDate"
             type="date"
             required
-            defaultValue={d.startDate}
+            value={startDate}
+            onChange={(e) => setStartDate(e.target.value)}
+            disabled={startDateLinked}
+            className={startDateLinked ? "opacity-60" : ""}
           />
         </div>
+
         <div className="space-y-2">
           <Label htmlFor="endDate">Bitiş tarihi</Label>
           <Input

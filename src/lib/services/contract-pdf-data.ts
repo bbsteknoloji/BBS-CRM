@@ -69,6 +69,7 @@ export async function buildContractPdfData(
     where: { id: contractId, deletedAt: null },
     select: {
       number: true,
+      contractDate: true,
       signedAt: true,
       createdAt: true,
       startDate: true,
@@ -112,7 +113,7 @@ export async function buildContractPdfData(
 
   const addr = contract.customer.addresses[0];
   const contact = contract.customer.contacts[0];
-  const contractDate = contract.signedAt ?? contract.createdAt;
+  const contractDate = contract.contractDate ?? contract.signedAt ?? contract.createdAt;
   const isSigned = contract.status === "SIGNED" || contract.status === "ACTIVE" || !!contract.signedAt;
 
   return {
