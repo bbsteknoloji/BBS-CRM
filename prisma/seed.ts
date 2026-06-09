@@ -40,6 +40,7 @@ const PERMISSIONS: Array<{
   { slug: "service:write", name: "Servis talebi düzenle", module: "service" },
   { slug: "service:assign", name: "Servis talebi ata", module: "service" },
   { slug: "service:close", name: "Servis talebi kapat", module: "service" },
+  { slug: "service:delete", name: "Servis talebi sil", module: "service" },
   { slug: "visit:read", name: "Saha ziyareti görüntüle", module: "visit" },
   { slug: "visit:write", name: "Saha ziyareti düzenle", module: "visit" },
   { slug: "task:read", name: "Görev görüntüle", module: "task" },

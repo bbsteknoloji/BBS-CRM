@@ -660,3 +660,29 @@ export async function listCustomerServiceTickets(
     take: limit,
   });
 }
+
+export async function deleteServiceTicket(
+  user: SessionUser,
+  serviceTicketId: string
+): Promise<string | null> {
+  const existing = await prisma.serviceTicket.findFirst({
+    where: { id: serviceTicketId, deletedAt: null },
+    select: { id: true, ticketNo: true, status: true },
+  });
+  if (!existing) return null;
+
+  await prisma.serviceTicket.update({
+    where: { id: serviceTicketId },
+    data: { deletedAt: new Date(), updatedById: user.id },
+  });
+
+  await createAuditLog({
+    userId: user.id,
+    action: "DELETE",
+    entityType: "service_ticket",
+    entityId: serviceTicketId,
+    changes: { ticketNo: existing.ticketNo, status: existing.status },
+  });
+
+  return existing.ticketNo;
+}

@@ -40,6 +40,7 @@ export default async function ServiceTicketDetailPage({
   const canWrite = hasPermission(user, "service:write");
   const canAssign = hasPermission(user, "service:assign");
   const canClose = hasPermission(user, "service:close");
+  const canDelete = hasPermission(user, "service:delete");
   const canVisitRead = hasPermission(user, "visit:read");
   const canVisitWrite = hasPermission(user, "visit:write");
   const canFileRead = hasPermission(user, "file:read");
@@ -72,10 +73,12 @@ export default async function ServiceTicketDetailPage({
         pageActions={
           <ServiceTicketDetailActions
             serviceTicketId={id}
+            ticketNo={ticket.ticketNo}
             status={ticket.status}
             canWrite={canWrite}
             canAssign={canAssign}
             canClose={canClose}
+            canDelete={canDelete}
             users={users}
           />
         }

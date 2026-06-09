@@ -23,25 +23,31 @@ import {
   closeServiceTicketAction,
   assignServiceTicketAction,
 } from "@/actions/service-tickets/status-actions";
+import { deleteServiceTicketAction } from "@/actions/service-tickets/delete-service-ticket";
 import { isServiceTicketEditable } from "@/lib/services/service-ticket-state-machine";
+import { DeleteConfirmDialog } from "@/components/common/delete-confirm-dialog";
 
 type UserOption = { id: string; firstName: string; lastName: string };
 
 type Props = {
   serviceTicketId: string;
+  ticketNo: string;
   status: ServiceTicketStatus;
   canWrite: boolean;
   canAssign: boolean;
   canClose: boolean;
+  canDelete: boolean;
   users: UserOption[];
 };
 
 export function ServiceTicketDetailActions({
   serviceTicketId,
+  ticketNo,
   status,
   canWrite,
   canAssign,
   canClose,
+  canDelete,
   users,
 }: Props) {
   const router = useRouter();
@@ -205,6 +211,15 @@ export function ServiceTicketDetailActions({
             </form>
           </DialogContent>
         </Dialog>
+      ) : null}
+
+      {canDelete ? (
+        <DeleteConfirmDialog
+          label={`Servis Talebi ${ticketNo}`}
+          description={`"${ticketNo}" numaralı servis talebi kalıcı olarak silinecek. Bu işlem geri alınamaz.`}
+          onDelete={() => deleteServiceTicketAction(serviceTicketId)}
+          redirectTo="/service-tickets"
+        />
       ) : null}
     </div>
   );
