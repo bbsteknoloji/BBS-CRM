@@ -582,7 +582,7 @@ export function ContractPdfDocument({ data }: { data: ContractPdfData }) {
         </Madde>
 
         <Madde no="Madde 20" title="Yetkili Mahkeme">
-          {"İşbu sözleşmeden doğacak uyuşmazlıklarda Erzurum Mahkemeleri ve Erzurum İcra Müdürlükleri yetkilidir."}
+          {"İşbu sözleşmeden kaynaklanan veya işbu sözleşme ile bağlantılı her türlü uyuşmazlıkta, hizmet sağlayıcı şirketin merkezinin bulunduğu yer mahkemeleri ve icra müdürlükleri yetkilidir."}
         </Madde>
 
         <Madde no="Madde 21" title="Ekler">
