@@ -1,0 +1,172 @@
+﻿size 46063
+TOTAL_PARAS 170
+P001|HOT SPOT GATEWAY C¦HAZI (¦NTERNET Aº ER¦Ì¦M KONTROL C¦HAZI) BAKIMI VE DESTEK H¦ZMET ALIMLARI T¦P SÍZLEÌMES¦
+P002|Madde 1- S÷zle■menin Taraflar² 
+P003|Bu s÷zle■me, bir tarafta K²■la Gazino M³d³rl³­³ (bundan sonra ô¦dareö olarak an²lacakt²r) ile di­er tarafta BBS TEKNOLOJ¦ (bundan sonra ôY³kleniciö olarak an²lacakt²r) aras²nda a■a­²da yaz²l² ■artlar dÔhilinde akdedilmi■tir.
+P004|Madde 2- Taraflara ¦li■kin Bilgiler
+P005|Adresi : Ìeyh Hayran, Cumhuriyet Cd. No:22
+P006|c) Telefon numaras²: 
+P007|) Faks numaras²: 
+P008|d) Elektronik posta adresi (varsa): 
+P009|2.2.Y³klenicinin Tebligat Adresi: ▄niversite Mah. ¦pekyolu Cad. Ata Teknokent No:22 ¦ kap² No:212 Yakutiye / ERZURUM 
+P010|Telefon numaras²: (0442) 233 86 00
+P011|Faks No: --
+P012|Elektronik Posta Adresi (Varsa): kadirkurt@bbsteknoloji.com.tr
+P013|2.3. Her iki taraf madde 2.1 ve 2.2. de belirtilen adreslerini tebligat adresleri olarak kabul etmi■lerdir. Adres de­i■iklikleri usul³ne uygun ■ekilde kar■² tarafa tebli­ edilmedike en son bildirilen adrese yap²lacak tebli­ ilgili tarafa yap²lm²■ say²l²r.
+P014|2.4. Taraflar yaz²l² tebligat² daha sonra s³resi iinde yapmak kayd²yla, elden teslim, posta veya posta kuryesi, teleks, faks veya elektronik posta gibi di­er yollarla bildirimde bulunabilir.
+P015|Madde 3- S÷zle■menin Dili
+P016|S÷zle■me T³rke olarak haz²rlanm²■t²r.
+P017|Madde 4- Tan²mlar
+P018|Bu S÷zle■menin uygulanmas²nda, 4734 say²l² Kamu ¦hale Kanunu ve 4735 say²l² Kamu ¦hale S÷zle■meleri Kanunu ile Hizmet ¦■leri Genel Ìartnamesinde (bundan sonra Genel Ìartname olarak an²lacakt²r) yer alan tan²mlar geerlidir.
+P019|Madde 5- ¦■ Tan²m²
+P020| S÷zle■me konusu i■; Y³klenici firma taraf²ndan 01.04.2026-31.03.2027 tarihleri aras²nda 23.05.2007 resm¯ gazete say²s²: 26530 5651 internet ortam²nda yap²lan yay²nlar²n d³zenlenmesi ve Bu yay²nlar yoluyla i■lenen sularla M³cadele edilmesi hakk²nda kanun kapsam²nda 12 ay s³re ile 20240219062 seri numaral² Hot spot Gateway cihaz²n²n (¦nternet A­ Eri■im Kontrol Cihaz²) cihaz bak²m onar²m² BBS TEKNOLOJ¦ taraf²ndan uzaktan g³ncelleme ve destek verilmesi i■idir. 
+P021|Madde 6- S÷zle■menin T³r³ ve Bedeli
+P022|6.1.Y³klenici taraf²ndan 01.04.2026- 31.03.2027 tarihleri aras²nda 12 ay boyunca verilecek hizmet kar■²l²­²nda idare taraf²ndan 9.900.-TL (KDV Hari) (Altm²■ Bin lira) ÷denecektir.
+P023|6.2.Y³klenici taraf²ndan verilecek hizmet kar■²l²­²nda ÷denecek ³cret s÷zle■me bitim tarihine kadar sabit kalacakt²r.
+P024|6.3.Bu kapsamda Firma s÷zle■me bedeli ³zerinden s÷zle■me damga vergisi 93,85 TL (Doksan ▄ TL Seksen Be■  KR) s÷zle■me tarihinden itibaren 15 g³n ierisinde damga vergisini T.C Ba■bakanl²k Hazine M³■te■arl²­² ¦ Ídemeler TR 48 0001 0011 6500 0010 0051 02 numaral² ¦BANÆa  yat²racak ve dekontun 1 (bir) n³shas²n² idareye teslim edecektir. Belirlenen s÷zle■me bedeli al²m taahh³tt³ yerine gemeyecek ve firman²n damga vergisinden do­acak herhangi bir zarar²ndan ¦dare sorumlu olmayacakt²r
+P025|Madde 7- S÷zle■me Bedeline DÔhil Olan Giderler
+P026|Taahh³d³n (ilave i■ler nedeniyle meydana gelebilecek art²■lar dÔhil) yerine getirilmesine ili■kin y³kleme, bo■altma, istif ve ula■²m ile her t³rl³ sigorta giderleri, e­itim ve ÷­retim giderleri, muayene masraflar² (muayene faaliyetini icra eden, numune veya rapor ta■²mak ³zere g÷revlendirilen personelin yolluk ve yevmiyeleri ba­l² oldu­u birlik ve kurum taraf²ndan kar■²lanacakt²r) s÷zle■me bedeline dÔhildir.
+P027|Madde 8- Vergi, Resim ve Harlar ile S÷zle■meyle ¦lgili Di­er Giderler
+P028|8.1. S÷zle■meye ve taahh³d³n tamam²n²n yap²lmas²na ait ÷denecek b³t³n vergi (KDV dahil), sigorta, ula■²m ve har giderleri ile s÷zle■menin o­alt²lmas² dÔhil s÷zle■me giderleri, s÷zle■me kapsam²nda kullan²lacak makine ve ekipman bedelleri s÷zle■me bedeline dÔhildir.
+P029|8.2. Taahh³d³n (ilave i■ler nedeniyle meydana gelebilecek art²■lar dÔhil) yerine getirilmesine ili■kin karar damga vergisi, s÷zle■me damga vergisi s÷zle■me bedeline dÔhil de­ildir. Hesaplanan vergi y³klenici taraf²ndan Vergi Dairesine yat²r²l²p dekontlar² idareye teslim edilecektir.
+P030|8.3. S÷zle■meye konu donan²mlar²n fiziksel olarak ar²zalanmalar² durumunda garanti kapsam² veya s³resi d²■²nda kalan ar²zal² ekipman veya komponentlerin tamir veya de­i■im bedelleri ile i■ilik ³cretleri bu s÷zle■me kapsam²na girmez.
+P031|Madde 9- S÷zle■menin Ekleri
+P032|Bu madde bo■ b²rak²lm²■t²r.
+P033|Madde 10- S÷zle■menin S³resi
+P034|   S÷zle■menin s³resi, i■e ba■lama tarihinden itibaren 01.04.2026 û 31.03.2027 tarihleri aras² 12 ayd²r. ¦dare taraf²ndan y³klenici taraf²ndan destek sa­land²ktan sonra her ay sonunda ÷deme yap²lacakt²r. Taraflardan her biri, S÷zle■me kapsam²ndaki kendi y³k³ml³l³klerinin tamamlanmas² veya sona ermesi ³zerine, S÷zle■menin bitim tarihinden 30 (otuz) g³n ÷ncesine kadar di­er tarafa s÷zle■me uzatmak veya bitirmek iin yaz²l² bildirimde bulunacakt²r.
+P035|Madde 11- Mal²n/¦■in Teslim Alma Ìekil ve Ìartlar² ile Teslim Program²
+P036|11.1. ¦■in Yap²lma / Mal²n Teslim Edilme Yeri
+P037|¦■in yap²lma Yeri / Yerleri: Ìeyh Hayran, Cumhuriyet Cd. No:22 Bayburt Merkezde Bulunan 17. Komando Tugay Komutan Yard²mc²l²­² Gazino M³d³rl³­³ 
+P038|11.2. ¦■e Ba■lama Tarihi: 01/04/2026
+P039|11.3.Teslimat Program²: ¦■e 01/04/2026 tarihinde ba■lanacak ve 31/03/2027 tarihinde tamamlanacakt²r. ¦dare s÷zle■me s³resi ile ilgili y³kleniciye ayr²ca bir uyar²da bulunmak zorunda de­ildir.
+P040|11.4. ¦■yerinin teslimine ili■kin esaslar ve i■e ba■lama tarihi: S÷zle■menin imzaland²­² tarihten itibaren 1 (bir) g³n iinde uzaktan g³ncelleme ve destek yap²larak i■e ba■lanacakt²r.
+P041|11.5. ¦■e Ait Promosyon:
+P042|Y³kleniciden; bu s÷zle■me kar■²l²­²nda promosyon al²nmayacakt²r.
+P043|Madde 12- Teminata ¦li■kin H³k³mler
+P044|12.1. Kesin Teminat:
+P045|12.1.1. Y³kleniciden bu i■e ili■kin olarak teminat al²nmayacakt²r.
+P046|Madde 13- Ídeme Yeri ve Ìartlar² 
+P047|13.1. S÷zle■me bedeli (ilave i■ler nedeniyle meydana gelebilecek art²■lara ili■kin bedel dÔhil) kar■²l²­²nda yap²lacak her t³rl³ ÷deme ¦dare muhasebesi taraf²ndan bu s÷zle■mede d³zenlenen hata, kusur ve eksikliklere ili■kin h³k³mler sakl² kalmak kayd²yla a■a­²da belirtilen zamanlarda ve ■ekilde ÷denecektir.
+P048|13.2.Ídeme Ko■ullar² ve Zaman²:
+P049|13.2.1. Ídemeye esas para birimi TL (T³rk Liras²)Æd²r. Fatura kesilmesine m³teakip fatura muhasebe teslim edilerek ÷deme gerekle■tirilecektir.
+P050|13.2.2. ¦dare, hak edi■ evraklar²n²n d³zenlenmesinden itibaren en ge 30 g³n iinde Y³kleniciye veya vekiline ÷demeyi yapacakt²r.
+P051|13.2.3. Y³klenici ba­l² oldu­u Vergi Dairesi M³d³rl³­³nden vadesi gemi■ bor durumunu g÷sterir belgenin asl²n² her ÷demeden ÷nce hak edi■ evrak²na ekleyecektir.
+P052|13.2.4. Y³klenici yap²lan i■e ili■kin hak edi■ ve alacaklar²n² idarenin yaz²l² izni olmaks²z²n ba■kalar²na devir veya temlik edemez. Temliknamelerin noterlike d³zenlenmesi ve idare taraf²ndan istenilen kay²t ve ■artlar² ta■²mas² zorunludur.
+P053|Madde 14- Avans Verilmesi, Ìartlar² ve Miktar²
+P054|Bu i■ iin avans verilmeyecektir.
+P055|Madde 15- Fiyat Fark²
+P056|15.1. Y³klenici, gerek s÷zle■me s³resi, gerekse uzat²lan s³re iinde, s÷zle■menin tamamen ifas²na kadar, vergi, resim, har ve benzeri mali y³k³ml³l³klerde art²■a gidilmesi, yeni mali y³k³ml³l³klerin ihdas², ³nitede sat²lmas²na idarece m³saade edilen ³r³nlerin tedarik fiyatlar²nda ciddi art²■ meydana gelmesi gibi nedenlerle fiyat fark² verilmesi talebini idareye yaz²l² olarak bildirir. ¦dare; y³klenicinin bu talebi do­rultusunda kendi ierisinde olu■turaca­² Fiyat Tespit Komisyonu marifetiyle yapaca­² fiyat ara■t²rmas²na istinaden gerekli d³zenlemelere gidip gitmemekte serbesttir. Karar hakk² tamamen idareye aittir.
+P057|15.2. S÷zle■mede yer alan fiyat fark²na ili■kin esas ve usullerde s÷zle■me imzaland²ktan sonra de­i■iklik yap²lamaz.
+P058|Madde 16- Alt Y³klenicilere ¦li■kin Bilgiler ve Sorumluluklar
+P059|Bu i■te alt y³klenici al²■t²r²lmayacak ve i■lerin tamam² y³klenicinin kendisi taraf²ndan yap²lacakt²r.
+P060|Madde 17- Cezalar ve Kesintiler
+P061|17.1. Y³klenicinin 26/9/2004 tarihli ve 5237 say²l² T³rk Ceza Kanununun 53 ³nc³ maddesinde belirtilen s³reler gemi■ olsa bile; kasten i■lenen bir sutan dolay² bir y²l veya daha fazla s³reyle hapis cezas²na ya da affa u­ram²■ olsa bile devletin g³venli­ine kar■² sular, Anayasal d³zene ve bu d³zenin i■leyi■ine kar■² sular, mill¯ savunmaya kar■² sular, devlet s²rlar²na kar■² sular ve casusluk, zimmet, irtikÔp, r³■vet, h²rs²zl²k, doland²r²c²l²k, sahtecilik, g³veni k÷t³ye kullanma, hileli iflas, ihaleye fesat kar²■t²rma, edimin ifas²na fesat kar²■t²rma, sutan kaynaklanan malvarl²­² de­erlerini aklama veya kaak²l²k ve ayn² Kanunun æCinsel Dokunulmazl²­a Kar■² SularÆ ba■l²kl² ¦kinci K²s²m Alt²nc² B÷l³m³nde d³zenlen maddelerde yer alan sulardan birinden mahk¹m olmas² hÔlinde, ¦dare y³klenicinin s÷zle■mesini tek tarafl² fesheder.
+P062|17.2. Y³klenici, s÷zle■me kapsam²nda belirtilen hususlara uymad²­² takdirde, idare taraf²ndan yaz²l² olarak ihtar verilecek ve 1Æinci ihtarda s÷zle■me bedelinin %1Æi kadar, 2Ænci ihtarda s÷zle■me bedelinin %2Æsi kadar, 3Æ³nc³ ihtarda ise s÷zle■me bedelinin %3Æ³ kadar idari para cezas² kesilecek olup y³klenici bu ceza bedellerini ÷demeyi kabul ve taahh³t eder. Kesilen ceza bedeli sermayeye gelir kaydedilir.
+P063|17.3. Y³klenici s÷zle■mede belirtilen t³m hususlarda meydana gelebilecek aksamalarla ilgili olarak toplam ³ defa (her bir yaz²l² uyar²yla birlikte 17.4 maddesindeki parasal cezada teshil edilecektir.) yaz²l² olarak uyar²ld²­²nda ³³nc³ ikazla birlikte s÷zle■menin feshedilme yetkisi idareye aittir. ¦dare ³³nc³ yaz²l² uyar² ile birlikte s÷zle■meyi feshedebilir veya uyar² cezalar²na devam edebilir. Fakat her ne sebeple olursa olsun toplam be■ defa yaz²l² olarak uyar²lan firman²n s÷zle■mesi be■inci uyar² yaz²s² ile birlikte feshedilir. ¦darenin uygun g÷rmesi ile ³³nc³ uyar²yla birlikte ya da be■inci uyar² ile birlikte s÷zle■menin feshi yoluna gidilmesi durumunda y³klenici firma idarenin u­rayaca­² maddi ve manevi zararlara ili■kin ortalama ayl²k cirosunun 1/3Æ ³ kadar para cezas²n²n ilk alaca­²ndan kesilerek idareye ÷denmesini kabul ve taahh³t eder. Bu para sermayeye gelir kaydedilir.  ▄³nc³ veya uygun g÷r³lmesi halinde be■inci uyar² yaz²s²ndan sonra, ayr²ca ikaz yaz²s²na gerek kalmaks²z²n kesin teminat ve varsa ek kesin teminat gelir kaydedilir ve s÷zle■me feshedilerek hesab² genel h³k³mlere g÷re tasfiye edilir.
+P064|17.4. Yukar²da belirtilen cezalar ayr²ca protesto ekmeye gerek kalmaks²z²n y³kleniciye yap²lacak ÷demelerden kesilir. Cezan²n ÷demelerden kar■²lanmamas² hÔlinde ceza tutar² y³kleniciden ayr²ca tahsil edilir.
+P065|Madde 18- S³re Uzat²m² Verilebilecek Haller ve Ìartlar²
+P066|18.1.M³cbir Sebepler: Y³kleniciden kaynaklanan bir kusurdan ileri gelmemi■ ve taahh³d³n yerine getirilmesine engel nitelikte olmas², Y³klenicinin bu engeli ortadan kald²rmaya g³c³n³n yetmemesi, m³cbir sebebin meydana geldi­i tarihi izleyen yirmi (20) g³n iinde Y³klenicinin ¦dareye yaz²l² olarak bildirimde bulunmas² ve bu durumun yetkili merciler taraf²ndan belgelendirilmesi kayd²yla a■a­²da belirtilen haller m³cbir sebep olarak kabul edilir:
+P067|a. Do­al afetler,
+P068|b. Kanuni grev,
+P069|c. Genel salg²n hastal²k,
+P070|. K²smi veya genel seferberlik ilan²,
+P071|d. Gerekti­inde Kamu ¦hale Kurumu taraf²ndan belirlenecek benzeri di­er haller.
+P072|18.1.1. 18.1.Æe g÷re zaman²nda yap²lmayan ba■vurular dikkate al²nmaz ve Y³klenici ba■vuru s³resini geirdikten sonra s³re uzat²m² iste­inde bulunamaz. M³cbir sebeplerden etkilenen Y³klenici, m³cbir sebeplerin etkisinden kurtulduktan sonra bu durumu ¦dareye bildirmek zorundad²r.
+P073|18.1.2. Bu hallerin belgelenmesi ve ¦darece kabul edilmesi halinde s³re uzat²m² verildi­i ve bunun kapsam² y³kleniciye bildirilir.
+P074|18.1.3. Taraflar, m³cbir sebeplerin sonucu olarak s÷zle■meden kaynaklanan y³k³ml³l³klerini yerine getirmede meydana gelebilecek gecikmeleri en aza indirmek iin azami gayreti g÷stereceklerdir.
+P075|18.2. ¦dareden Kaynaklanan Sebepler: ¦darenin, s÷zle■menin ifas²na ili■kin olarak bu s÷zle■mede ve Genel Ìartnamede yer alan y³k³ml³l³klerini Y³klenicinin kusuru olmaks²z²n ÷ng÷r³len s³reler iinde yerine getirmemesi ( yer teslimi, projelerin ve i■ program²n²n onaylanmas², izin, ruhsat ve olurlar gibi) ve bu sebeple i■in s³resi iinde bitirilmesinin m³mk³n olmamas² hÔlinde, bu durumun taahh³d³n yerine getirilmesine engel nitelikte olmas² ve Y³klenicinin bu engeli kald²rmaya g³c³n³n yetmemesi kayd²yla, durum ¦darece incelenerek i■i engelleyici sebeplere ve yap²lacak i■in niteli­ine g÷re i■in s³resi, gecikmeyi kar■²layacak ■ekilde i■in ilgili k²sm² veya tamam² iin uzat²labilir.
+P076|18.3. ¦lave i■ler nedeniyle i■ art²■²n²n ortaya ²kmas² hÔlinde i■in s³resi, bu art²■la orant²l² olarak i■in ilgili k²sm² veya tamam² iin uzat²l²r.
+P077|18.4. S³re uzat²m²na ili■kin di­er hususlarda Genel Ìartnamenin ilgili h³k³mleri uygulanacakt²r.
+P078|Madde 19- Kontrol Te■kilat², G÷rev ve Yetkileri
+P079|¦■in, s÷zle■me ve eklerinde tespit edilen standartlara (kalite ve ÷zelliklere) uygun y³r³t³l³p y³r³t³lmedi­i ¦dare taraf²ndan g÷revlendirilen Heyet arac²l²­²yla denetlenir. G÷revlendirilen Heyet Genel Ìartnamenin D÷rd³nc³ B÷l³m³nde belirtilen yetkileri kullan²r ve g÷revleri yerine getirir.
+P080|Madde 20- ¦■in Y³r³t³lmesine ¦li■kin Kay²t ve Tutanaklar
+P081|20.1. Ídeme Esnas²nda ¦stenecek Belge, Kay²t ve Tutanaklar
+P082|Ayl²k hak edi■ler hÔlinde ÷deme ve kabul i■lemi iin;
+P083|a. Her hak edi■ d÷neminde SGK ædan al²nacak prim borcu, idari para cezas² ile bunlara ili■kin gecikme cezas², gecikme zamm² ve di­er ferilerinden olu■an borcun olup/olmad²­²n² g÷steren belge,
+P084|b. Vergi borcu yoktur yaz²s²,
+P085|c. Fatura,
+P086|. S÷zle■meye ayk²r² yap²lan i■ler var ise tutana­²,
+P087|Madde 21- Teslim, Muayene ve Kabul ¦■lemlerine ¦li■kin Ìartlar
+P088|21.1. Muayene ve kabul ■ekil ve ■artlar²:
+P089|21.1.1. Y³klenici taraf²ndan mevcut sisteme entegre edilmesi iin yap²lan her t³rl³ g³ncelleme, yedek kay²tlardan dosya y³kleme veya yeni kurulum i■lemleri idare taraf²ndan de­i■iklik talep eden birimce incelenip istenen nitelik ve ÷zellikleri ta■²y²p ta■²mad²­² kontrol edilecektir.
+P090|21.2. ¦dare gerek duyulmas² halinde yap²lan g³ncelleme, yenile■tirme al²■mas²n² al²p almamakta serbesttir.
+P091|21.3.  Bu i■te k²smi kabul yap²lmayacakt²r.
+P092|21.4. Teslim al²nan i■in muayene ve kabul i■lemleri, 19.12.2002 tarih ve 24968 say²l² Resm¯ Gazetede yay²mlanan ôHizmet Al²mlar² Muayene ve Kabul Y÷netmeli­iö ile Genel Ìartnamenin Sekizinci B÷l³m³nde yer alan h³k³mlere g÷re i■in kabule elveri■li ■ekilde teslim edildi­i tarihten itibaren 2 i■g³n³ iinde yap²larak kesin hesap raporu ²kar²l²r.
+P093|21.5. Mevcut sistemin korunmas² ve sigortalanmas²na ili■kin sorumluluk y³kleniciye aittir.
+P094|Madde 22- Sigorta T³rleri ile Teminat Kapsam² ve Limitleri:
+P095|22.1. Bu madde bo■ b²rak²lm²■t²r.
+P096|Madde 23- Y³klenicinin S÷zle■me Konusu ¦■ ¦le ¦lgili Sorumluluklar²
+P097|Y³klenicinin s÷zle■me konusu i■ ile ili■kin sorumluluklar², ilgili mevzuat²n bu konuyu d³zenleyen emredici h³k³mlerinde belirlenmi■ olup, y³klenici bunlar² aynen uygulamakla y³k³ml³d³r.
+P098|Madde 24- S÷zle■mede De­i■iklik Yap²lmas²
+P099|24.1. S÷zle■me bedelinin a■²lmamas² ve ¦dare ile Y³klenicinin kar■²l²kl² olarak anla■mas² kayd²yla,
+P100|a. ¦■in yap²lma veya teslim yeri,
+P101|b. ¦■in s³resinden ÷nce yap²lmas² veya teslim edilmesi kayd²yla i■in s³resi ve bu s³reye uygun olarak ÷deme ■artlar²na ait hususlarda s÷zle■me h³k³mlerinde de­i■iklik yap²labilir.
+P102|24.2. Bu hallerin d²■²nda s÷zle■me h³k³mlerinde de­i■iklik yap²lamaz ve ek s÷zle■me d³zenlenemez.
+P103|Madde 25- Y³klenicinin Íl³m³, ¦flas², A­²r Hastal²­², Tutuklulu­u veya Mahk¹miyeti
+P104|25.1. Y³klenicinin ÷l³m³, iflas², a­²r hastal²­², tutuklulu­u veya ÷zg³rl³­³ k²s²tlay²c² bir cezaya mahk¹miyeti hallerinde 4735 say²l² Kanunun ilgili h³k³mlerine g÷re i■lem tesis edilir.
+P105|25.2. Ortak giri■im taraf²ndan gerekle■tirilen i■lerde, ortaklardan birinin ÷l³m³, iflas, a­²r hastal²­², tutuklu­u veya ÷zg³rl³­³ k²s²tlay²c² bir cezaya mahk¹miyeti hallerinde 4735 say²l² Kanunun ilgili h³k³mlerine g÷re i■lem tesis edilir.
+P106|Madde 26- Y³klenicinin S÷zle■meyi Feshetmesi
+P107|Y³klenicinin, s÷zle■me yap²ld²ktan sonra m³cbir sebep halleri d²■²nda, mal¯ acz iinde bulunmas² nedeniyle taahh³d³n³ yerine getiremeyece­ini gerekeleri ile birlikte ¦dareye yaz²l² olarak bildirmesi hÔlinde, ayr²ca protesto ekmeye gerek kalmaks²z²n varsa kesin teminat ve varsa ek kesin teminatlar gelir kaydedilir ve s÷zle■me feshedilerek hesab² genel h³k³mlere g÷re tasfiye edilir.
+P108|Madde 27- ¦darenin S÷zle■meyi Feshetmesi
+P109|27.1. Y³klenicinin taahh³d³n³ ihale dok³man² ve s÷zle■me h³k³mlerine uygun olarak yerine getirmemesi veya i■i s³resinde bitirmemesi ³zerine, s÷zle■mede belirlenen oranda gecikme cezas² uygulanmak ³zere, idarenin en az 5 (be■) g³n s³reli ve nedenleri a²ka belirtilen ihtar²na ra­men ayn² durumun devam etmesi,
+P110|27.2. S÷zle■menin uygulanmas² s²ras²nda Y³klenicinin 4735 say²l² Kanunun 25Æinci maddesinde belirtilen yasak fiil ve davran²■larda bulundu­unun tespit edilmesi, hallerinde ayr²ca protesto ekmeye gerek kalmaks²z²n ve s÷zle■me feshedilerek kesin teminat ve varsa ek kesin teminatlar gelir kaydedilir.
+P111|Madde 28- S÷zle■meden Ínceki Yasak Fiil veya Davran²■lar Nedeniyle Fesih
+P112|28.1. Y³klenicinin, s÷zle■me s³recinde 4734 say²l² Kanuna g÷re yasak fiil veya davran²■larda bulundu­unun s÷zle■me yap²ld²ktan sonra tespit edilmesi hÔlinde, varsa kesin teminat ve varsa ek kesin teminatlar gelir kaydedilir ve s÷zle■me feshedilerek hesab² genel h³k³mlere g÷re tasfiye edilir.
+P113|28.2. Ancak, taahh³d³n en az %80Æinin tamamlanm²■ olmas² ve taahh³d³n tamamlatt²r²lmas²nda kamu yarar² bulunmas² kayd²yla;
+P114|a. ¦vedili­i nedeniyle taahh³d³n kalan k²sm²n²n yeniden ihale edilmesi iin yeterli s³renin bulunmamas²,
+P115|b. Taahh³d³n ba■ka bir y³kleniciye yapt²r²lmas²n²n m³mk³n olmamas²,
+P116|c. Y³klenicinin yasak fiil veya davran²■²n²n taahh³d³n³ tamamlamas²n² engelleyecek nitelikte olmamas² hallerinde, ¦dare s÷zle■meyi feshetmeksizin Y³kleniciden taahh³d³n³ tamamlamas²n² isteyebilir ve bu takdirde Y³klenici taahh³d³n³ tamamlamak zorundad²r.
+P117|28.3. Ancak bu durumda, Y³klenici hakk²nda 4735 say²l² Kanunun 26Ænc² maddesi h³km³ne g÷re i■lem yap²l²r ve Y³kleniciden s÷zle■me bedelinin %3Æ³ kadar ceza tahsil edilir. Bu ceza hak edi■lerden kesinti yap²lmak suretiyle de tahsil edilebilir.
+P118|Madde 29- M³cbir Sebeplerden Dolay² S÷zle■menin Feshi
+P119|M³cbir sebeplerden dolay² ¦dare veya Y³klenici s÷zle■meyi tek tarafl² olarak feshedebilir. Ancak Y³klenicinin m³cbir sebebe dayal² bir s³re uzat²m² talebi varsa idarenin s÷zle■meyi feshedebilmesi iin uzat²lan s³renin sonunda i■in s÷zle■me ve eklerine uygun ■ekilde tamamlanmam²■ olmas² gerekir. S÷zle■menin feshedilmesi hÔlinde, hesab² genel h³k³mlere g÷re tasfiye edilerek kesin teminat ve varsa ek kesin teminatlar iade edilir.
+P120|Madde 30- S÷zle■me Kapsam²nda Yapt²r²labilecek ¦lave ¦■ler, ¦■ Eksili■i ve ¦■in Tasfiyesi
+P121|30.1. Íng÷r³lemeyen durumlar nedeniyle bir i■ art²■²n²n zorunlu olmas² hÔlinde, i■in;
+P122|a. S÷zle■meye esas i■ tan²m² iinde kalmas²,
+P123|b. ¦dareyi k³lfete sokmaks²z²n as²l i■ten ayr²lmas²n²n teknik veya ekonomik olarak m³mk³n olmamas², ■artlar²yla s÷zle■me bedelinin %20'sine kadar oran dÔhilinde, s³re hari s÷zle■me ve ihale dok³man²ndaki h³k³mler erevesinde ayn² y³kleniciye yapt²rmaya idare yetkilidir. ¦■in bu ■artlar dÔhilinde tamamlanamayaca­²n²n anla■²lmas² durumunda ise art²■ yap²lmaks²z²n hesab² genel h³k³mlere g÷re tasfiye edilir. Ancak bu durumda, i■in tamam²n²n ihale dok³man² ve s÷zle■me h³k³mlerine uygun olarak yerine getirilmesi zorunludur.
+P124|30.2. S÷zle■me bedelinin % 80'inden daha d³■³k bedelle tamamlanaca­²n²n anla■²lmas² hÔlinde, y³klenici i■i bitirmek zorundad²r. Bu durumda y³kleniciye, yapm²■ oldu­u gerek giderleri ve y³klenici kÔr²na kar■²l²k olarak, s÷zle■me bedelinin % 80'i ile s÷zle■me fiyatlar²yla yapt²­² i■in tutar² aras²ndaki bedel fark²n²n % 5'i kabul (garanti s³reli i■lerde ÷n kabul) tarihindeki fiyatlar ³zerinden ÷denir.
+P125|Madde 31- Y³klenicinin Ceza Sorumlulu­u
+P126|¦■ tamamland²ktan ve kabul i■lemi yap²ld²ktan sonra tespit edilmi■ olsa dahi 4735 say²l² Kanunun 25Æinci maddesinde belirtilen fiil veya davran²■lardan T³rk Ceza KanunuÆna g÷re su te■kil eden fiil veya davran²■larda bulunan Y³klenici ile o i■teki ortak veya vekilleri hakk²nda T³rk Ceza Kanunu h³k³mlerine g÷re ceza kovu■turmas² yap²lmak ³zere yetkili Cumhuriyet Savc²l²­²na su duyurusunda bulunulur. Bu ki■iler hakk²nda bir cezaya h³kmedilmesi hÔlinde, 4735 say²l² Kanunun 27Ænci maddesi h³km³ uygulan²r.
+P127|Madde 32- Y³klenicinin Tazmin Sorumlulu­u
+P128|Y³klenici, taahh³d³ erevesinde kusurlu veya standartlara uygun olmayan malzeme seilmesi, verilmesi veya kullan²lmas², tasar²m hatas², uygulama yanl²■l²­², denetim eksikli­i, taahh³d³n s÷zle■me ve ■artname h³k³mlerine uygun olarak yerine getirilmemesi ve benzeri nedenlerle ortaya ²kan zarar ve ziyandan do­rudan sorumludur. Bu zarar ve ziyan genel h³k³mlere g÷re Y³kleniciye ikmal ve tazmin ettirilece­i gibi, haklar²nda 4735 say²l² Kanunun 27Ænci maddesi h³k³mleri de uygulan²r.
+P129|Madde 33- Fikri ve S²na¯ M³lkiyete Konu Olan Hususlar
+P130|¦dare taraf²ndan s÷zle■me konusu i■ ile ilgili t³m ³r³nler fikri ve s²nai m³lkiyete konu olan t³m lisans i■lemleri ile sat²■a sunma konusundaki t³m sorumluluk y³kleniciye aittir. ¦dareden bu konuda herhangi bir hak talep edilemez.
+P131|Madde 34- Montaj, ¦■letmeye Alma, E­itim, Bak²m, Yedek Para Gibi Destek Hizmetlerine Ait Ìartlar
+P132|Bu madde bo■ b²rak²lm²■t²r.
+P133|Madde 35- Garanti ¦le ¦lgili Ìartlar
+P134|Bu madde bo■ b²rak²lm²■t²r.
+P135|Madde 36- H³k³m Bulunmayan Haller
+P136|Bu s÷zle■me ve eklerinde h³k³m bulunmayan hallerde, ilgisine g÷re 4734 ve 4735 say²l² Kanun h³k³mlerine, T³rk Silahl² Kuvvetleri Orduevleri, Asker¯ Gazinolar, K²■la Gazinolar² ve Vardiya Yatakhaneleri ¦le E­itim Merkezleri Y÷netmeli­i / Asker¯ Kantin Y÷netmeli­i h³k³mlerine, bu mevzuatlarda h³k³m bulunmamas² hÔlinde ise genel h³k³mlere g÷re hareket edilir.
+P137|Madde 37- Di­er Hususlar
+P138|37.1 Y³klenici; ¦dare taraf²ndan talep edilmesi halinde kullan²lan yaz²l²m ile ilgili e­itimleri ³cretsiz olarak verecektir.
+P139|37.2 S÷zle■me tarihinden itibaren bir defaya mahsus yaz²l²m ile ilgili kullan²m dok³manlar² verilecektir.
+P140|37.3.Y³klenici; ¦dare taraf²ndan talep edilmesi halinde uzaktan ba­lant² yoluyla veya bunun sa­lanamamas² durumunda personel yollamak suretiyle idarenin programdan kaynaklanan problemlerinin ÷z³lmesini sa­lamak zorundad²r. Yollanacak personelin ula■²m, konaklama ve ia■e giderleri idare taraf²ndan kar■²lanacakt²r.
+P141|37.4. Y³klenici; idarenin talebi do­rultusunda mevcut programa entegre edilecek ■ekilde bilgisayar, terazi vb., ilave edilmesi veya yeni ³nite veya tesis a²lmas² durumunda herhangi bir s³re veya miktar s²n²rlamas² olmaks²z²n gerekli d³zenleme i■lemleri y³klenici taraf²ndan ³cretsiz yap²lacakt²r. 
+P142|37.5. Y³klenici; idare taraf²ndan y÷netmeli­e uygun ■ekilde programa dÔhil edilmesi talep edilen veya de­i■iklik ieren hususlar² kar■²l²kl² g÷r³■me suretiyle yerine getirmek iin gerekli tedbirleri almakla sorumludur.
+P143|37.6. Y³klenici; program²n kurulum, g³ncelleme vb. de­i■ikliklerini ieren konularda yeni kurulum veya g³ncelleme yap²lmas² durumunda meydana gelebilecek her t³rl³ hata ve kusurdan sorumludur. Meydana gelebilecek bu hata ve kusurlarla ilgili durumlar² ÷zmek iin gerekli tedbirleri alacakt²r.
+P144|37.7. Y³klenici; idare taraf²ndan kullan²lan mevcut sistemin g³venlik a²klar², vir³s durumlar² vb. konularda idare ile payla■acakt²r.
+P145|37.8. Yaz²l²m²n versiyonlar²nda yap²lan ve yap²lacak idare lehine iyile■tirmeler ³cretsiz olarak y³klenilecektir. Yaz²l²m ve kurulum ile ilgili i■lemler yukar²da belirtildi­i gibi firma taraf²ndan ³cretsiz kar■²lanacakt²r.
+P146|37.9.¦dare taraf²ndan kullan²lmakta olan madde cihazlar²n y÷netimi, bak²m² ve al²■²r durumda tutulmas² ve fonksiyonlar²n²n d³zg³n yerine getirmesinin sa­lanmas² BBS TEKNOLOJ¦ taraf²ndan internet ³zerinden uzaktan ba­lant² yolu ile sa­lanacakt²r. 
+P147| 
+P148|37.10.Hizmet verilecek donan²m²n al²■abilmesi ve uzaktan eri■ilebilir olmas² iin gereken ■artlar (Internet/Elektrik/vs.) idare taraf²ndan sa­lanacakt²r. 
+P149| 
+P150|37.11.BBS TEKNOLOJ¦ s÷zle■me kapsam²nda donan²m²n s³rekli al²■²r durumda olmas²n² takip edecek ve gerekli g÷rd³­³ durumlarda y÷netim amal² m³dahaleler yapacakt²r. 
+P151| 
+P152|37.12. Sistem loglar²n²n sa­l²kl² tutulmas², bu loglar²n zaman damgas² ile damgalanarak saklanmas² ve bunun iin gereken zaman damgas² kont÷rlerinin temini BBS TEKNOLOJ¦ taraf²ndan s÷zle■me kapsam²nda gerekle■tirilecektir. 
+P153| 
+P154|37.13.S÷zle■me s³resi ierisinde BBS TEKNOLOJ¦ taraf²ndan donan²mlar²n yaz²l²mlar²nda yap²lacak yaz²l²m geli■tirmelerini ieren yaz²l²m g³ncellemeleri ³cretsiz olarak gerekle■tirilecektir, idareden hibir bedel talep edilmeyecektir. 
+P155| 
+P156|37.14.S÷zle■me kapsam²nda 1 adet SMS mod³l ve 1 adet Entegrasyon mod³l³ geli■tirilmesi talep durumunda ³cretsiz olarak gerekle■tirilecektir. S÷zle■me d÷nemi iinde birden fazla SMS veya entegrasyon mod³l³ geli■tirilmesi veya di­er ÷zel fonksiyon talepleri ayr²ca ³cretlendirilir. 
+P157| 
+P158|37.15.¦dare taraf²ndan Ar²za veya istek bildirimi telefon veya e-MA¦L yolu ile yap²lacakt²r, Mesai saatleri d²■²nda yap²lan bildirimler sonraki ilk mesai g³n³ ierisinde de­erlendirilecektir. 
+P159| 
+P160|37.16.Donan²m problem veya ar²zas² ve mesai s³resi iinde bildirildi­inde (09:00 û 18:00) derhal uzaktan ba­lant² sa­lanarak problemin giderilmesine al²■²lacakt²r. 
+P161|37.17.Ar²zal² donan²m²n BBS TEKNOLOJI 'den farkl² ■ehirde oldu­u durumlarda: Ar²zal² Donan²m kargo yoluyla BBS TEKNOLOJ¦ 'ye g÷nderilecektir, B÷yle durumlarda BBS TEKNOLOJ¦ idarenin talebine ba­l² olarak onar²m s³resi ierisinde ar²zal² cihaz²n yerine ikame olunacak yedek bir donan²m² kargo ile ve kargo bedeli dahil olacak ■ekilde yollayacakt²r.   
+P162|37.18.BBS TEKNOLOJ¦ 'ye kargo ile ula■t²r²lan ar²zal² cihazlardan donan²m garantisi ve bak²m s÷zle■mesi kapsam² iinde olanlar en ge sonraki i■ g³n³ onar²larak kargo ile geri g÷nderilecektir.  Onar²m²n m³mk³n olmad²­² durumlarda donan²m garantisi devam eden cihazlar bire bir ayn²s²yla veya denk gelen ba■ka bir model ile de­i■tirilecektir.  
+P163|37.19.Yerinde servis taleplerinde hizmet bedeli ayr²ca ÷denecektir.   
+P164|Madde 38- Anla■mazl²klar²n Ã÷z³m³
+P165|Bu s÷zle■me ve eklerinin uygulanmas²ndan do­abilecek her t³rl³ anla■mazl²­²n ÷z³m³nde Askeri Gazino M³d³rl³­³n³n konu■lu bulundu­u Bayburt mahkemeleri ve icra daireleri yetkilidir.
+P166|Madde 39- Y³r³rl³k
+P167|Bu s÷zle■me taraflarca imzaland²­² tarihte y³r³rl³­e girer.
+P168|Madde 40- ¦mza
+P169|Bu s÷zle■me 40 (k²rk) maddeden ibaret olup, ¦dare ve Y³klenici taraf²ndan tam olarak okunup anla■²ld²ktan sonra 01/04/2026 tarihinde 1 (bir) n³sha olarak imza alt²na al²nm²■ ve idarede al²konulmu■tur. Ayr²ca, y³klenicinin herhangi bir zamanda talebi halinde s÷zle■menin "asl²na uygun idarece onayl² sureti" idare taraf²ndan d³zenlenip y³kleniciye verilecektir.
+P170|¦DAREY▄KLEN¦C¦

@@ -1,0 +1,166 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * BBS Teknoloji — kurumsal operasyon paneli token'ları
+ * background #0F172A | surface #1E293B | accent #2563EB
+ * success #22C55E | warning #F59E0B | danger #EF4444
+ */
+
+@layer base {
+  /* Açık tema — kurumsal, sade (toggle korunur) */
+  :root {
+    --background: 210 40% 98%;
+    --foreground: 222 47% 11%;
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+    --primary: 221 83% 53%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 210 20% 96%;
+    --secondary-foreground: 222 47% 11%;
+    --muted: 210 20% 96%;
+    --muted-foreground: 215 16% 47%;
+    --accent: 210 20% 94%;
+    --accent-foreground: 222 47% 11%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 214 20% 90%;
+    --input: 214 20% 90%;
+    --ring: 221 83% 53%;
+    --radius: 0.5rem;
+    --success: 142 71% 45%;
+    --warning: 38 92% 50%;
+    --danger: 0 84% 60%;
+    --brand-accent: 221 83% 53%;
+    --sidebar: 222 47% 18%;
+    --sidebar-foreground: 210 20% 96%;
+    --sidebar-border: 217 33% 22%;
+    --sidebar-accent: 217 33% 20%;
+  }
+
+  /* Koyu tema — varsayılan operasyon merkezi (dark-first) */
+  .dark {
+    --background: 222 47% 11%;
+    --foreground: 210 40% 96%;
+    --card: 217 33% 17%;
+    --card-foreground: 210 40% 96%;
+    --primary: 221 83% 53%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 217 33% 20%;
+    --secondary-foreground: 210 40% 96%;
+    --muted: 217 33% 20%;
+    --muted-foreground: 215 16% 65%;
+    --accent: 217 33% 22%;
+    --accent-foreground: 210 40% 96%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 215 25% 27%;
+    --input: 215 25% 27%;
+    --ring: 221 83% 53%;
+    --sidebar: 222 47% 9%;
+    --sidebar-foreground: 210 20% 92%;
+    --sidebar-border: 217 33% 20%;
+    --sidebar-accent: 217 33% 18%;
+    --success: 142 71% 45%;
+    --warning: 38 92% 50%;
+    --danger: 0 84% 60%;
+    --brand-accent: 221 83% 53%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+  }
+}
+
+@layer utilities {
+  .bbs-app-gradient {
+    background: radial-gradient(
+        ellipse 80% 50% at 50% -20%,
+        rgba(37, 99, 235, 0.12),
+        transparent 55%
+      ),
+      hsl(var(--background));
+  }
+
+  .glass-panel {
+    background: hsl(var(--card) / 0.85);
+    backdrop-filter: blur(8px);
+    border: 1px solid hsl(var(--border) / 0.55);
+    border-radius: calc(var(--radius) + 2px);
+    box-shadow: 0 4px 24px rgba(15, 23, 42, 0.18);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .glass-panel-hover:hover {
+    border-color: hsl(var(--primary) / 0.4);
+    box-shadow: 0 8px 28px rgba(15, 23, 42, 0.22);
+  }
+
+  .hover-lift {
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .hover-lift:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  }
+
+  .premium-btn-primary {
+    background: #2563eb;
+    color: #fff;
+  }
+
+  .premium-btn-primary:hover {
+    background: #1d4ed8;
+  }
+
+  .premium-table-row {
+    transition: background 0.12s ease;
+  }
+
+  .premium-table-row:hover {
+    background: hsl(var(--primary) / 0.06);
+  }
+
+  .text-success {
+    color: hsl(var(--success));
+  }
+
+  .text-warning {
+    color: hsl(var(--warning));
+  }
+
+  .text-danger {
+    color: hsl(var(--danger));
+  }
+
+  /* Dosya merkezi — FAZ 7 geriye uyumluluk */
+  .file-center-theme {
+    color: hsl(var(--foreground));
+  }
+
+  .fc-glass {
+    @apply glass-panel;
+  }
+
+  .fc-glass:hover {
+    @apply glass-panel-hover;
+  }
+
+  .fc-input {
+    @apply flex h-10 w-full rounded-md border border-input bg-background/50 px-3 text-sm;
+  }
+
+  .fc-btn-primary {
+    @apply premium-btn-primary rounded-md px-4 text-sm font-medium;
+  }
+
+  .fc-table-row {
+    @apply premium-table-row;
+  }
+}

@@ -1,0 +1,1063 @@
+// BBS Müşteri / Teklif / Sözleşme Yönetimi — Faz 0
+// PostgreSQL + Prisma | B2B | Soft delete + Audit
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// =============================================================================
+// ENUMS
+// =============================================================================
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+}
+
+enum RoleCode {
+  SUPER_ADMIN
+  ADMIN
+  SALES
+  VIEWER
+  TECHNICIAN
+  FIELD_OPS
+}
+
+enum CustomerStatus {
+  LEAD
+  ACTIVE
+  INACTIVE
+  CHURNED
+}
+
+enum AddressType {
+  BILLING
+  SHIPPING
+  HEADQUARTERS
+}
+
+enum ActivityType {
+  NOTE
+  CALL
+  EMAIL
+  MEETING
+  STATUS_CHANGE
+  QUOTE_CREATED
+  QUOTE_UPDATED
+  QUOTE_SENT
+  QUOTE_APPROVED
+  QUOTE_REJECTED
+  QUOTE_REVISED
+  QUOTE_CONVERTED
+  CONTRACT_CREATED
+  CONTRACT_UPDATED
+  CONTRACT_ACTIVATED
+  CONTRACT_SUSPENDED
+  CONTRACT_EXPIRED
+  CONTRACT_RENEWED
+  CONTRACT_TERMINATED
+  TASK_CREATED
+  TASK_COMPLETED
+  DOCUMENT_UPLOADED
+  ASSIGNMENT_CHANGED
+  SERVICE_TICKET_CREATED
+  SERVICE_TICKET_UPDATED
+  SERVICE_TICKET_STATUS_CHANGED
+  SERVICE_TICKET_ASSIGNED
+  SERVICE_TICKET_CLOSED
+  VISIT_RECORDED
+  VISIT_UPDATED
+  FILE_VIEW
+  FILE_DOWNLOAD
+  OTHER
+}
+
+enum TaskStatus {
+  TODO
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+enum TaskPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum QuoteStatus {
+  DRAFT
+  SENT
+  REVISION
+  APPROVED
+  REJECTED
+  EXPIRED
+  CONVERTED
+}
+
+enum ContractStatus {
+  DRAFT
+  SIGNED
+  ACTIVE
+  SUSPENDED
+  EXPIRED
+  TERMINATED
+  RENEWED
+}
+
+enum ContractRenewalStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  COMPLETED
+}
+
+enum ProductType {
+  PRODUCT
+  SERVICE
+}
+
+enum Currency {
+  TRY
+  USD
+  EUR
+}
+
+enum DocumentStatus {
+  PENDING
+  ACTIVE
+  ARCHIVED
+}
+
+enum DocumentEntityType {
+  CUSTOMER
+  QUOTE
+  CONTRACT
+  TASK
+  SERVICE_TICKET
+  VISIT
+}
+
+enum NotificationType {
+  QUOTE_APPROVAL
+  QUOTE_SENT
+  CONTRACT_EXPIRING
+  CONTRACT_RENEWED
+  TASK_ASSIGNED
+  TASK_DUE
+  CUSTOMER_ASSIGNED
+  SERVICE_TICKET_ASSIGNED
+  SERVICE_TICKET_STATUS
+  VISIT_SCHEDULED
+  CUSTOMER_HEALTH_RISK
+  SYSTEM
+}
+
+enum NotificationChannel {
+  IN_APP
+  EMAIL
+}
+
+enum NumberSequenceType {
+  QUOTE
+  CONTRACT
+  SERVICE
+  VISIT
+}
+
+enum ServiceTicketStatus {
+  OPEN
+  IN_PROGRESS
+  WAITING_CUSTOMER
+  RESOLVED
+  CLOSED
+}
+
+enum CustomerHealthStatus {
+  HEALTHY
+  WARNING
+  RISK
+}
+
+enum SettingValueType {
+  STRING
+  NUMBER
+  BOOLEAN
+  JSON
+}
+
+enum AuditAction {
+  CREATE
+  UPDATE
+  DELETE
+  SOFT_DELETE
+  RESTORE
+  LOGIN
+  LOGOUT
+  EXPORT
+  CONVERT
+  STATUS_CHANGE
+  RENEW
+}
+
+// =============================================================================
+// AUTH & RBAC
+// =============================================================================
+
+model User {
+  id           String     @id @default(uuid()) @db.Uuid
+  email        String     @unique @db.VarChar(255)
+  passwordHash String     @map("password_hash") @db.VarChar(255)
+  firstName    String     @map("first_name") @db.VarChar(100)
+  lastName     String     @map("last_name") @db.VarChar(100)
+  phone        String?    @db.VarChar(30)
+  status       UserStatus @default(ACTIVE)
+  lastLoginAt  DateTime?  @map("last_login_at") @db.Timestamptz(6)
+
+  companyId String?  @map("company_id") @db.Uuid
+  company   Company? @relation(fields: [companyId], references: [id], onDelete: SetNull)
+
+  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime  @updatedAt @map("updated_at") @db.Timestamptz(6)
+  deletedAt   DateTime? @map("deleted_at") @db.Timestamptz(6)
+  createdById String?   @map("created_by_id") @db.Uuid
+  updatedById String?   @map("updated_by_id") @db.Uuid
+
+  createdBy    User?  @relation("UserCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+  updatedBy    User?  @relation("UserUpdatedBy", fields: [updatedById], references: [id], onDelete: SetNull)
+  createdUsers User[] @relation("UserCreatedBy")
+  updatedUsers User[] @relation("UserUpdatedBy")
+
+  userRoles UserRole[]
+
+  assignedCustomers Customer[] @relation("CustomerAssignedTo")
+  ownedContracts    Contract[] @relation("ContractOwner")
+  assignedTasks        Task[]           @relation("TaskAssignedTo")
+  createdTasks         Task[]           @relation("TaskCreatedBy")
+  assignedServiceTickets ServiceTicket[] @relation("ServiceTicketAssignedTo")
+  visitRecords         VisitRecord[]    @relation("VisitRecordUser")
+
+  activities       Activity[]
+  auditLogs        AuditLog[]
+  notifications    Notification[]
+  documents        Document[]
+  quotesCreated    Quote[]        @relation("QuoteCreatedBy")
+  quotesUpdated    Quote[]        @relation("QuoteUpdatedBy")
+  contractsCreated Contract[]     @relation("ContractCreatedBy")
+  contractsUpdated Contract[]     @relation("ContractUpdatedBy")
+  customersCreated Customer[]     @relation("CustomerCreatedBy")
+  customersUpdated Customer[]     @relation("CustomerUpdatedBy")
+  serviceTicketsCreated ServiceTicket[] @relation("ServiceTicketCreatedBy")
+  serviceTicketsUpdated ServiceTicket[] @relation("ServiceTicketUpdatedBy")
+  visitsCreated         VisitRecord[]   @relation("VisitRecordCreatedBy")
+  visitsUpdated         VisitRecord[]   @relation("VisitRecordUpdatedBy")
+
+  @@index([status])
+  @@index([deletedAt])
+  @@index([email])
+  @@index([companyId])
+  @@map("users")
+}
+
+model Role {
+  id          String   @id @default(uuid()) @db.Uuid
+  code        RoleCode @unique
+  name        String   @db.VarChar(100)
+  description String?  @db.Text
+
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  userRoles       UserRole[]
+  rolePermissions RolePermission[]
+
+  @@map("roles")
+}
+
+model Permission {
+  id          String  @id @default(uuid()) @db.Uuid
+  slug        String  @unique @db.VarChar(100) // örn: customer:read
+  name        String  @db.VarChar(150)
+  description String? @db.Text
+  module      String  @db.VarChar(50) // customer, quote, contract, task, ...
+
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  rolePermissions RolePermission[]
+
+  @@index([module])
+  @@map("permissions")
+}
+
+model UserRole {
+  id     String @id @default(uuid()) @db.Uuid
+  userId String @map("user_id") @db.Uuid
+  roleId String @map("role_id") @db.Uuid
+
+  assignedAt DateTime @default(now()) @map("assigned_at") @db.Timestamptz(6)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role Role @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, roleId])
+  @@index([userId])
+  @@index([roleId])
+  @@map("user_roles")
+}
+
+model RolePermission {
+  id           String @id @default(uuid()) @db.Uuid
+  roleId       String @map("role_id") @db.Uuid
+  permissionId String @map("permission_id") @db.Uuid
+
+  role       Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@unique([roleId, permissionId])
+  @@index([roleId])
+  @@index([permissionId])
+  @@map("role_permissions")
+}
+
+// =============================================================================
+// CRM — B2B ONLY
+// =============================================================================
+
+model Customer {
+  id String @id @default(uuid()) @db.Uuid
+
+  // B2B zorunlu alanlar
+  legalName String  @map("legal_name") @db.VarChar(255)
+  tradeName String? @map("trade_name") @db.VarChar(255)
+  taxNumber String? @map("tax_number") @db.VarChar(20)
+  taxOffice String? @map("tax_office") @db.VarChar(100)
+  sector    String? @db.VarChar(100)
+  website   String? @db.VarChar(255)
+
+  status   CustomerStatus @default(LEAD)
+  notes    String?        @db.Text
+  metadata Json?          @db.JsonB
+
+  healthStatus     CustomerHealthStatus? @map("health_status")
+  healthComputedAt DateTime?             @map("health_computed_at") @db.Timestamptz(6)
+
+  assignedToId String? @map("assigned_to_id") @db.Uuid
+
+  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime  @updatedAt @map("updated_at") @db.Timestamptz(6)
+  deletedAt   DateTime? @map("deleted_at") @db.Timestamptz(6)
+  createdById String?   @map("created_by_id") @db.Uuid
+  updatedById String?   @map("updated_by_id") @db.Uuid
+
+  assignedTo User? @relation("CustomerAssignedTo", fields: [assignedToId], references: [id], onDelete: SetNull)
+  createdBy  User? @relation("CustomerCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+  updatedBy  User? @relation("CustomerUpdatedBy", fields: [updatedById], references: [id], onDelete: SetNull)
+
+  contacts   CustomerContact[]
+  devices    CustomerDevice[]
+  addresses  CustomerAddress[]
+  activities Activity[]
+  tasks      Task[]
+  quotes         Quote[]
+  contracts      Contract[]
+  serviceTickets ServiceTicket[]
+  visitRecords   VisitRecord[]
+
+  @@unique([taxNumber])
+  @@index([healthStatus])
+  @@index([status])
+  @@index([assignedToId])
+  @@index([legalName])
+  @@index([tradeName])
+  @@index([deletedAt])
+  @@index([createdAt(sort: Desc)])
+  @@map("customers")
+}
+
+model CustomerContact {
+  id         String  @id @default(uuid()) @db.Uuid
+  customerId String  @map("customer_id") @db.Uuid
+  fullName   String  @map("full_name") @db.VarChar(200)
+  title      String? @db.VarChar(100)
+  email      String? @db.VarChar(255)
+  phone      String? @db.VarChar(30)
+  mobile     String? @db.VarChar(30)
+  isPrimary  Boolean @default(false) @map("is_primary")
+  notes      String? @db.Text
+
+  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime  @updatedAt @map("updated_at") @db.Timestamptz(6)
+  deletedAt   DateTime? @map("deleted_at") @db.Timestamptz(6)
+  createdById String?   @map("created_by_id") @db.Uuid
+  updatedById String?   @map("updated_by_id") @db.Uuid
+
+  customer Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+
+  @@index([customerId])
+  @@index([customerId, isPrimary])
+  @@index([deletedAt])
+  @@index([email])
+  @@map("customer_contacts")
+}
+
+model CustomerDevice {
+  id           String  @id @default(uuid()) @db.Uuid
+  customerId   String? @map("customer_id") @db.Uuid
+  deviceName   String  @map("device_name") @db.VarChar(255)
+  brand        String? @db.VarChar(100)
+  model        String? @db.VarChar(100)
+  serialNumber String? @map("serial_number") @db.VarChar(100)
+  notes        String? @db.Text
+
+  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime  @updatedAt @map("updated_at") @db.Timestamptz(6)
+  deletedAt   DateTime? @map("deleted_at") @db.Timestamptz(6)
+  createdById String?   @map("created_by_id") @db.Uuid
+  updatedById String?   @map("updated_by_id") @db.Uuid
+
+  customer        Customer?        @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  contractDevices ContractDevice[]
+
+  @@index([customerId])
+  @@index([customerId, deletedAt])
+  @@index([serialNumber])
+  @@map("customer_devices")
+}
+
+model ContractDevice {
+  id         String @id @default(uuid()) @db.Uuid
+  contractId String @map("contract_id") @db.Uuid
+  deviceId   String @map("device_id") @db.Uuid
+
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  contract Contract       @relation(fields: [contractId], references: [id], onDelete: Cascade)
+  device   CustomerDevice @relation(fields: [deviceId], references: [id], onDelete: Restrict)
+
+  @@unique([contractId, deviceId])
+  @@index([contractId])
+  @@index([deviceId])
+  @@map("contract_devices")
+}
+
+model CustomerAddress {
+  id         String      @id @default(uuid()) @db.Uuid
+  customerId String      @map("customer_id") @db.Uuid
+  type       AddressType @default(BILLING)
+  label      String?     @db.VarChar(100)
+  line1      String      @db.VarChar(255)
+  line2      String?     @db.VarChar(255)
+  district   String?     @db.VarChar(100)
+  city       String      @db.VarChar(100)
+  postalCode String?     @map("postal_code") @db.VarChar(20)
+  country    String      @default("TR") @db.VarChar(2)
+  isPrimary  Boolean     @default(false) @map("is_primary")
+
+  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime  @updatedAt @map("updated_at") @db.Timestamptz(6)
+  deletedAt   DateTime? @map("deleted_at") @db.Timestamptz(6)
+  createdById String?   @map("created_by_id") @db.Uuid
+  updatedById String?   @map("updated_by_id") @db.Uuid
+
+  customer Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+
+  @@index([customerId])
+  @@index([customerId, type])
+  @@index([deletedAt])
+  @@map("customer_addresses")
+}
+
+// Timeline — tüm modüller bu tablo üzerinden
+model Activity {
+  id          String       @id @default(uuid()) @db.Uuid
+  customerId  String       @map("customer_id") @db.Uuid
+  type        ActivityType
+  title       String       @db.VarChar(255)
+  description String?      @db.Text
+  metadata    Json?        @db.JsonB
+  occurredAt  DateTime     @default(now()) @map("occurred_at") @db.Timestamptz(6)
+
+  userId     String? @map("user_id") @db.Uuid
+  quoteId          String? @map("quote_id") @db.Uuid
+  contractId       String? @map("contract_id") @db.Uuid
+  taskId           String? @map("task_id") @db.Uuid
+  serviceTicketId  String? @map("service_ticket_id") @db.Uuid
+  visitRecordId    String? @map("visit_record_id") @db.Uuid
+
+  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime  @updatedAt @map("updated_at") @db.Timestamptz(6)
+  deletedAt   DateTime? @map("deleted_at") @db.Timestamptz(6)
+  createdById String?   @map("created_by_id") @db.Uuid
+  updatedById String?   @map("updated_by_id") @db.Uuid
+
+  customer Customer  @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  user     User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+  quote    Quote?    @relation(fields: [quoteId], references: [id], onDelete: SetNull)
+  contract      Contract?      @relation(fields: [contractId], references: [id], onDelete: SetNull)
+  task          Task?          @relation(fields: [taskId], references: [id], onDelete: SetNull)
+  serviceTicket ServiceTicket? @relation(fields: [serviceTicketId], references: [id], onDelete: SetNull)
+  visitRecord   VisitRecord?   @relation(fields: [visitRecordId], references: [id], onDelete: SetNull)
+
+  @@index([customerId, occurredAt(sort: Desc)])
+  @@index([customerId, type])
+  @@index([quoteId])
+  @@index([contractId])
+  @@index([taskId])
+  @@index([serviceTicketId])
+  @@index([visitRecordId])
+  @@index([userId])
+  @@index([deletedAt])
+  @@map("activities")
+}
+
+model Task {
+  id          String       @id @default(uuid()) @db.Uuid
+  title       String       @db.VarChar(255)
+  description String?      @db.Text
+  status      TaskStatus   @default(TODO)
+  priority    TaskPriority @default(MEDIUM)
+  startAt     DateTime?    @map("start_at") @db.Timestamptz(6)
+  dueAt       DateTime?    @map("due_at") @db.Timestamptz(6)
+  completedAt DateTime?    @map("completed_at") @db.Timestamptz(6)
+
+  customerId   String? @map("customer_id") @db.Uuid
+  quoteId      String? @map("quote_id") @db.Uuid
+  contractId   String? @map("contract_id") @db.Uuid
+  assignedToId String  @map("assigned_to_id") @db.Uuid
+
+  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime  @updatedAt @map("updated_at") @db.Timestamptz(6)
+  deletedAt   DateTime? @map("deleted_at") @db.Timestamptz(6)
+  createdById String?   @map("created_by_id") @db.Uuid
+  updatedById String?   @map("updated_by_id") @db.Uuid
+
+  customer   Customer? @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  quote      Quote?    @relation(fields: [quoteId], references: [id], onDelete: SetNull)
+  contract   Contract? @relation(fields: [contractId], references: [id], onDelete: SetNull)
+  assignedTo User      @relation("TaskAssignedTo", fields: [assignedToId], references: [id], onDelete: Restrict)
+  createdBy  User?     @relation("TaskCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+
+  activities Activity[]
+
+  @@index([assignedToId, status])
+  @@index([customerId])
+  @@index([dueAt])
+  @@index([status])
+  @@index([deletedAt])
+  @@index([createdAt(sort: Desc)])
+  @@map("tasks")
+}
+
+// =============================================================================
+// CATALOG
+// =============================================================================
+
+model Product {
+  id          String      @id @default(uuid()) @db.Uuid
+  sku         String      @unique @db.VarChar(50)
+  name        String      @db.VarChar(255)
+  description String?     @db.Text
+  type        ProductType @default(SERVICE)
+  unit        String      @default("adet") @db.VarChar(30)
+  unitPrice   Decimal     @default(0) @map("unit_price") @db.Decimal(18, 4)
+  currency    Currency    @default(TRY)
+  taxRate     Decimal     @default(20) @map("tax_rate") @db.Decimal(5, 2)
+  isActive    Boolean     @default(true) @map("is_active")
+
+  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime  @updatedAt @map("updated_at") @db.Timestamptz(6)
+  deletedAt   DateTime? @map("deleted_at") @db.Timestamptz(6)
+  createdById String?   @map("created_by_id") @db.Uuid
+  updatedById String?   @map("updated_by_id") @db.Uuid
+
+  quoteLineItems    QuoteLineItem[]
+  contractLineItems ContractLineItem[]
+
+  @@index([isActive])
+  @@index([deletedAt])
+  @@index([name])
+  @@map("products")
+}
+
+// =============================================================================
+// QUOTES
+// =============================================================================
+
+model Quote {
+  id         String      @id @default(uuid()) @db.Uuid
+  number     String      @unique @db.VarChar(30)
+  customerId String      @map("customer_id") @db.Uuid
+  title      String      @db.VarChar(255)
+  status     QuoteStatus @default(DRAFT)
+  currency   Currency    @default(TRY)
+  version    Int         @default(1)
+
+  validUntil  DateTime? @map("valid_until") @db.Date
+  sentAt      DateTime? @map("sent_at") @db.Timestamptz(6)
+  approvedAt  DateTime? @map("approved_at") @db.Timestamptz(6)
+  rejectedAt  DateTime? @map("rejected_at") @db.Timestamptz(6)
+  convertedAt DateTime? @map("converted_at") @db.Timestamptz(6)
+
+  subtotal Decimal @default(0) @db.Decimal(18, 4)
+  taxTotal Decimal @default(0) @map("tax_total") @db.Decimal(18, 4)
+  total    Decimal @default(0) @db.Decimal(18, 4)
+  notes    String? @db.Text
+  terms    String? @db.Text
+
+  convertedContractId String? @unique @map("converted_contract_id") @db.Uuid
+
+  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime  @updatedAt @map("updated_at") @db.Timestamptz(6)
+  deletedAt   DateTime? @map("deleted_at") @db.Timestamptz(6)
+  createdById String?   @map("created_by_id") @db.Uuid
+  updatedById String?   @map("updated_by_id") @db.Uuid
+
+  customer          Customer   @relation(fields: [customerId], references: [id], onDelete: Restrict)
+  convertedContract Contract?  @relation("QuoteConvertedContract", fields: [convertedContractId], references: [id], onDelete: SetNull)
+  sourceContracts   Contract[] @relation("ContractSourceQuote")
+  createdBy         User?      @relation("QuoteCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+  updatedBy         User?      @relation("QuoteUpdatedBy", fields: [updatedById], references: [id], onDelete: SetNull)
+
+  lineItems   QuoteLineItem[]
+  revisions   QuoteRevision[]
+  pdfVersions QuotePdfVersion[]
+  activities  Activity[]
+  tasks       Task[]
+
+  @@index([customerId, status])
+  @@index([status])
+  @@index([validUntil])
+  @@index([deletedAt])
+  @@index([createdAt(sort: Desc)])
+  @@map("quotes")
+}
+
+model QuoteLineItem {
+  id        String  @id @default(uuid()) @db.Uuid
+  quoteId   String  @map("quote_id") @db.Uuid
+  productId String? @map("product_id") @db.Uuid
+  sortOrder Int     @default(0) @map("sort_order")
+
+  description String  @db.VarChar(500)
+  productCode String? @map("product_code") @db.VarChar(64)
+  quantity    Decimal @default(1) @db.Decimal(18, 4)
+  unit        String  @default("adet") @db.VarChar(30)
+  unitPrice   Decimal @map("unit_price") @db.Decimal(18, 4)
+  taxRate     Decimal @map("tax_rate") @db.Decimal(5, 2)
+  lineTotal   Decimal @map("line_total") @db.Decimal(18, 4)
+
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  quote   Quote    @relation(fields: [quoteId], references: [id], onDelete: Cascade)
+  product Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+
+  @@index([quoteId])
+  @@index([quoteId, sortOrder])
+  @@map("quote_line_items")
+}
+
+model QuoteRevision {
+  id        String   @id @default(uuid()) @db.Uuid
+  quoteId   String   @map("quote_id") @db.Uuid
+  version   Int
+  title     String   @db.VarChar(255)
+  subtotal  Decimal  @db.Decimal(18, 4)
+  taxTotal  Decimal  @map("tax_total") @db.Decimal(18, 4)
+  total     Decimal  @db.Decimal(18, 4)
+  notes     String?  @db.Text
+  lineItems Json     @map("line_items") @db.JsonB
+
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  createdById String?  @map("created_by_id") @db.Uuid
+
+  quote Quote @relation(fields: [quoteId], references: [id], onDelete: Cascade)
+
+  @@unique([quoteId, version])
+  @@index([quoteId])
+  @@map("quote_revisions")
+}
+
+model QuotePdfVersion {
+  id           String   @id @default(uuid()) @db.Uuid
+  quoteId      String   @map("quote_id") @db.Uuid
+  quoteVersion Int      @map("quote_version")
+  storageKey   String   @map("storage_key") @db.VarChar(500)
+  relativePath String   @map("relative_path") @db.VarChar(500)
+  sizeBytes    Int      @map("size_bytes")
+  mimeType     String   @default("application/pdf") @map("mime_type") @db.VarChar(127)
+
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  createdById String?  @map("created_by_id") @db.Uuid
+
+  quote Quote @relation(fields: [quoteId], references: [id], onDelete: Cascade)
+
+  @@unique([quoteId, quoteVersion])
+  @@index([quoteId])
+  @@map("quote_pdf_versions")
+}
+
+// =============================================================================
+// CONTRACTS
+// =============================================================================
+
+model Contract {
+  id         String         @id @default(uuid()) @db.Uuid
+  number     String         @unique @db.VarChar(30)
+  customerId String         @map("customer_id") @db.Uuid
+  quoteId    String?        @map("quote_id") @db.Uuid
+  title      String         @db.VarChar(255)
+  status     ContractStatus @default(DRAFT)
+  currency   Currency       @default(TRY)
+
+  startDate         DateTime  @map("start_date") @db.Date
+  endDate           DateTime? @map("end_date") @db.Date
+  signedAt          DateTime? @map("signed_at") @db.Timestamptz(6)
+  autoRenew         Boolean   @default(false) @map("auto_renew")
+  renewalNoticeDays Int       @default(30) @map("renewal_notice_days")
+
+  subtotal Decimal @default(0) @db.Decimal(18, 4)
+  taxTotal Decimal @default(0) @map("tax_total") @db.Decimal(18, 4)
+  total    Decimal @default(0) @db.Decimal(18, 4)
+  notes         String? @db.Text
+  terms         String? @db.Text
+  invoiceNumber String  @default("") @map("invoice_number") @db.VarChar(100)
+  templateData  Json?   @map("template_data") @db.JsonB
+
+  ownerId          String  @map("owner_id") @db.Uuid
+  parentContractId String? @map("parent_contract_id") @db.Uuid
+
+  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime  @updatedAt @map("updated_at") @db.Timestamptz(6)
+  deletedAt   DateTime? @map("deleted_at") @db.Timestamptz(6)
+  createdById String?   @map("created_by_id") @db.Uuid
+  updatedById String?   @map("updated_by_id") @db.Uuid
+
+  customer       Customer   @relation(fields: [customerId], references: [id], onDelete: Restrict)
+  sourceQuote    Quote?     @relation("ContractSourceQuote", fields: [quoteId], references: [id], onDelete: SetNull)
+  convertedFrom  Quote?     @relation("QuoteConvertedContract")
+  owner          User       @relation("ContractOwner", fields: [ownerId], references: [id], onDelete: Restrict)
+  parentContract Contract?  @relation("ContractRenewalChain", fields: [parentContractId], references: [id], onDelete: SetNull)
+  childContracts Contract[] @relation("ContractRenewalChain")
+  createdBy      User?      @relation("ContractCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+  updatedBy      User?      @relation("ContractUpdatedBy", fields: [updatedById], references: [id], onDelete: SetNull)
+
+  lineItems   ContractLineItem[]
+  contractDevices ContractDevice[]
+  renewals    ContractRenewal[]
+  pdfVersions ContractPdfVersion[]
+  activities      Activity[]
+  tasks           Task[]
+  serviceTickets  ServiceTicket[]
+  visitRecords    VisitRecord[]
+
+  @@index([customerId, status])
+  @@index([status])
+  @@index([endDate])
+  @@index([ownerId])
+  @@index([quoteId])
+  @@index([parentContractId])
+  @@index([deletedAt])
+  @@index([createdAt(sort: Desc)])
+  @@map("contracts")
+}
+
+// =============================================================================
+// OPERATIONS — Service & Field
+// =============================================================================
+
+model ServiceTicket {
+  id             String              @id @default(uuid()) @db.Uuid
+  ticketNo       String              @unique @map("ticket_no") @db.VarChar(30)
+  customerId     String              @map("customer_id") @db.Uuid
+  contractId     String?             @map("contract_id") @db.Uuid
+  title          String              @db.VarChar(255)
+  description    String?             @db.Text
+  priority       TaskPriority        @default(MEDIUM)
+  status         ServiceTicketStatus @default(OPEN)
+  assignedUserId String?             @map("assigned_user_id") @db.Uuid
+
+  openedAt DateTime  @default(now()) @map("opened_at") @db.Timestamptz(6)
+  closedAt DateTime? @map("closed_at") @db.Timestamptz(6)
+
+  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime  @updatedAt @map("updated_at") @db.Timestamptz(6)
+  deletedAt   DateTime? @map("deleted_at") @db.Timestamptz(6)
+  createdById String?   @map("created_by_id") @db.Uuid
+  updatedById String?   @map("updated_by_id") @db.Uuid
+
+  customer     Customer  @relation(fields: [customerId], references: [id], onDelete: Restrict)
+  contract     Contract? @relation(fields: [contractId], references: [id], onDelete: SetNull)
+  assignedUser User?     @relation("ServiceTicketAssignedTo", fields: [assignedUserId], references: [id], onDelete: SetNull)
+  createdBy    User?     @relation("ServiceTicketCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+  updatedBy    User?     @relation("ServiceTicketUpdatedBy", fields: [updatedById], references: [id], onDelete: SetNull)
+
+  activities   Activity[]
+  visitRecords VisitRecord[]
+
+  @@index([customerId, status])
+  @@index([assignedUserId, status])
+  @@index([status, openedAt(sort: Desc)])
+  @@index([contractId])
+  @@index([deletedAt])
+  @@index([createdAt(sort: Desc)])
+  @@map("service_tickets")
+}
+
+model VisitRecord {
+  id              String    @id @default(uuid()) @db.Uuid
+  visitNo         String    @unique @map("visit_no") @db.VarChar(30)
+  customerId      String    @map("customer_id") @db.Uuid
+  contractId      String?   @map("contract_id") @db.Uuid
+  serviceTicketId String?   @map("service_ticket_id") @db.Uuid
+  userId          String    @map("user_id") @db.Uuid
+  visitDate     DateTime  @map("visit_date") @db.Date
+  description   String    @db.Text
+  result        String?   @db.Text
+  nextVisitDate DateTime? @map("next_visit_date") @db.Date
+
+  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime  @updatedAt @map("updated_at") @db.Timestamptz(6)
+  deletedAt   DateTime? @map("deleted_at") @db.Timestamptz(6)
+  createdById String?   @map("created_by_id") @db.Uuid
+  updatedById String?   @map("updated_by_id") @db.Uuid
+
+  customer      Customer       @relation(fields: [customerId], references: [id], onDelete: Restrict)
+  contract      Contract?      @relation(fields: [contractId], references: [id], onDelete: SetNull)
+  serviceTicket ServiceTicket? @relation(fields: [serviceTicketId], references: [id], onDelete: SetNull)
+  user          User           @relation("VisitRecordUser", fields: [userId], references: [id], onDelete: Restrict)
+  createdBy User?     @relation("VisitRecordCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+  updatedBy User?     @relation("VisitRecordUpdatedBy", fields: [updatedById], references: [id], onDelete: SetNull)
+
+  activities Activity[]
+
+  @@index([customerId, visitDate(sort: Desc)])
+  @@index([userId, visitDate(sort: Desc)])
+  @@index([nextVisitDate])
+  @@index([contractId])
+  @@index([serviceTicketId])
+  @@index([deletedAt])
+  @@index([createdAt(sort: Desc)])
+  @@map("visit_records")
+}
+
+model ContractLineItem {
+  id         String  @id @default(uuid()) @db.Uuid
+  contractId String  @map("contract_id") @db.Uuid
+  productId  String? @map("product_id") @db.Uuid
+  sortOrder  Int     @default(0) @map("sort_order")
+
+  description String  @db.VarChar(500)
+  quantity    Decimal @default(1) @db.Decimal(18, 4)
+  unit        String  @default("adet") @db.VarChar(30)
+  unitPrice   Decimal @map("unit_price") @db.Decimal(18, 4)
+  taxRate     Decimal @map("tax_rate") @db.Decimal(5, 2)
+  lineTotal   Decimal @map("line_total") @db.Decimal(18, 4)
+
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  contract Contract @relation(fields: [contractId], references: [id], onDelete: Cascade)
+  product  Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+
+  @@index([contractId])
+  @@index([contractId, sortOrder])
+  @@map("contract_line_items")
+}
+
+model ContractRenewal {
+  id            String                @id @default(uuid()) @db.Uuid
+  contractId    String                @map("contract_id") @db.Uuid
+  newContractId String?               @map("new_contract_id") @db.Uuid
+  status        ContractRenewalStatus @default(COMPLETED)
+
+  previousEndDate DateTime  @map("previous_end_date") @db.Date
+  newStartDate    DateTime  @map("new_start_date") @db.Date
+  newEndDate      DateTime? @map("new_end_date") @db.Date
+  newTotal        Decimal?  @map("new_total") @db.Decimal(18, 4)
+  notes           String?   @db.Text
+
+  renewedAt DateTime? @map("renewed_at") @db.Timestamptz(6)
+
+  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime  @updatedAt @map("updated_at") @db.Timestamptz(6)
+  deletedAt   DateTime? @map("deleted_at") @db.Timestamptz(6)
+  createdById String?   @map("created_by_id") @db.Uuid
+  updatedById String?   @map("updated_by_id") @db.Uuid
+
+  contract Contract @relation(fields: [contractId], references: [id], onDelete: Cascade)
+
+  @@index([contractId])
+  @@index([status])
+  @@index([deletedAt])
+  @@index([newContractId])
+  @@map("contract_renewals")
+}
+
+model ContractPdfVersion {
+  id           String   @id @default(uuid()) @db.Uuid
+  contractId   String   @map("contract_id") @db.Uuid
+  version      Int      @default(1)
+  storageKey   String   @map("storage_key") @db.VarChar(500)
+  relativePath String   @map("relative_path") @db.VarChar(500)
+  sizeBytes    Int      @map("size_bytes")
+  mimeType     String   @default("application/pdf") @map("mime_type") @db.VarChar(127)
+
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  createdById String?  @map("created_by_id") @db.Uuid
+
+  contract Contract @relation(fields: [contractId], references: [id], onDelete: Cascade)
+
+  @@unique([contractId, version])
+  @@index([contractId])
+  @@map("contract_pdf_versions")
+}
+
+// =============================================================================
+// DOCUMENTS — Local storage (Hostinger VPS)
+// =============================================================================
+
+model Document {
+  id           String         @id @default(uuid()) @db.Uuid
+  originalName String         @map("original_name") @db.VarChar(255)
+  mimeType     String         @map("mime_type") @db.VarChar(127)
+  sizeBytes    Int            @map("size_bytes")
+  checksum     String?        @db.VarChar(64)
+  status       DocumentStatus @default(PENDING)
+
+  // Local path: uploads/{entityType}/{entityId}/{storedName}
+  storageKey   String @map("storage_key") @db.VarChar(500)
+  relativePath String @map("relative_path") @db.VarChar(500)
+
+  uploadedById String @map("uploaded_by_id") @db.Uuid
+
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime  @updatedAt @map("updated_at") @db.Timestamptz(6)
+  deletedAt DateTime? @map("deleted_at") @db.Timestamptz(6)
+
+  uploadedBy User           @relation(fields: [uploadedById], references: [id], onDelete: Restrict)
+  links      DocumentLink[]
+
+  @@index([status])
+  @@index([uploadedById])
+  @@index([deletedAt])
+  @@index([storageKey])
+  @@map("documents")
+}
+
+model DocumentLink {
+  id         String             @id @default(uuid()) @db.Uuid
+  documentId String             @map("document_id") @db.Uuid
+  entityType DocumentEntityType @map("entity_type")
+  entityId   String             @map("entity_id") @db.Uuid
+  label      String?            @db.VarChar(100)
+
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  document Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  @@unique([documentId, entityType, entityId])
+  @@index([entityType, entityId])
+  @@index([documentId])
+  @@map("document_links")
+}
+
+// =============================================================================
+// NOTIFICATIONS
+// =============================================================================
+
+model Notification {
+  id       String              @id @default(uuid()) @db.Uuid
+  userId   String              @map("user_id") @db.Uuid
+  type     NotificationType
+  channel  NotificationChannel @default(IN_APP)
+  title    String              @db.VarChar(255)
+  body     String?             @db.Text
+  metadata Json?               @db.JsonB
+  readAt   DateTime?           @map("read_at") @db.Timestamptz(6)
+
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, readAt])
+  @@index([userId, createdAt(sort: Desc)])
+  @@map("notifications")
+}
+
+// =============================================================================
+// SYSTEM
+// =============================================================================
+
+model AuditLog {
+  id         String      @id @default(uuid()) @db.Uuid
+  userId     String?     @map("user_id") @db.Uuid
+  action     AuditAction
+  entityType String      @map("entity_type") @db.VarChar(50)
+  entityId   String?     @map("entity_id") @db.Uuid
+  changes    Json?       @db.JsonB
+  ipAddress  String?     @map("ip_address") @db.VarChar(45)
+  userAgent  String?     @map("user_agent") @db.VarChar(500)
+
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([entityType, entityId])
+  @@index([userId])
+  @@index([action])
+  @@index([createdAt(sort: Desc)])
+  @@map("audit_logs")
+}
+
+model NumberSequence {
+  id        String             @id @default(uuid()) @db.Uuid
+  type      NumberSequenceType
+  year      Int
+  prefix    String             @db.VarChar(10)
+  lastValue Int                @default(0) @map("last_value")
+
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  @@unique([type, year])
+  @@map("number_sequences")
+}
+
+// Single-tenant issuer profile (PDF header, documents, settings UI)
+model Company {
+  id        String   @id @default(uuid()) @db.Uuid
+  name      String   @db.VarChar(255)
+  logoUrl   String?  @map("logo_url") @db.VarChar(500)
+  email     String?  @db.VarChar(255)
+  phone     String?  @db.VarChar(50)
+  address   String?  @db.Text
+
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  users User[]
+
+  @@map("companies")
+}
+
+model Setting {
+  id          String           @id @default(uuid()) @db.Uuid
+  key         String           @unique @db.VarChar(100)
+  value       String           @db.Text
+  valueType   SettingValueType @default(STRING) @map("value_type")
+  description String?          @db.Text
+  isPublic    Boolean          @default(false) @map("is_public")
+
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  @@map("settings")
+}

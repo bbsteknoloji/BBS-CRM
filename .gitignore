@@ -1,0 +1,60 @@
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+.yarn/install-state.gz
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log
+
+# env
+.env
+.env*.local
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+
+# uploads
+/storage/uploads/*
+!/storage/uploads/.gitkeep
+
+# prisma
+prisma/migrations/**/migration_lock.toml
+
+# operational scripts (one-time import/fix scripts — not needed in production)
+# prisma/scripts/
+# scripts/
+
+# data files
+*.xlsx
+*.xls
+C：*
+*.py
+
+# build artifacts
+dist/
+logs/
+Thumbs.db
+*.tmp
+*.temp
+.cache/
