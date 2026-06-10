@@ -128,6 +128,8 @@ const ROLE_DEFINITIONS: Array<{
       "service:write",
       "service:assign",
       "service:close",
+      "service:pdf",
+      "service:cost",
       "visit:read",
       "visit:write",
       "task:read",

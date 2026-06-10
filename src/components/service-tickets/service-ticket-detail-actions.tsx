@@ -215,6 +215,17 @@ export function ServiceTicketDetailActions({
         </Dialog>
       ) : null}
 
+      {/* Servis fişi — her role açık, tarayıcıda yazdırılabilir */}
+      <Button variant="outline" size="sm" asChild>
+        <a
+          href={`/service-tickets/${serviceTicketId}/print`}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Servis Fişi
+        </a>
+      </Button>
+
       {canPdf ? (
         <Button variant="outline" size="sm" asChild>
           <a
