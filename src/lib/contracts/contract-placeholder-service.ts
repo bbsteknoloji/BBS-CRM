@@ -24,7 +24,7 @@ function formatContractAmount(
     maximumFractionDigits: 2,
   }).format(n);
   const suffix = currency === "TRY" ? " TL" : ` ${currency}`;
-  return `${formatted}${suffix} (KDV Hariç)`;
+  return `${formatted}${suffix}`;
 }
 
 function formatAddress(parts: {
@@ -65,6 +65,7 @@ export function buildContractTemplatePlaceholders(input: {
   createdAt: Date;
   startDate: Date;
   endDate: Date | null;
+  subtotal: Prisma.Decimal | { toString(): string };
   total: Prisma.Decimal | { toString(): string };
   currency: Currency;
   invoiceNumber: string | null | undefined;
@@ -111,7 +112,7 @@ export function buildContractTemplatePlaceholders(input: {
       primaryContact?.mobile?.trim() ||
       "—",
     email: primaryContact?.email?.trim() || "—",
-    contractAmount: formatContractAmount(input.total, input.currency),
+    contractAmount: formatContractAmount(input.subtotal, input.currency),
     invoiceNumber: formatInvoiceNumber(input.invoiceNumber),
     devices: formatDeviceRows(input.devices),
   };
@@ -124,6 +125,7 @@ const CONTRACT_TEMPLATE_SELECT = {
   createdAt: true,
   startDate: true,
   endDate: true,
+  subtotal: true,
   total: true,
   currency: true,
   invoiceNumber: true,

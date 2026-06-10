@@ -493,6 +493,7 @@ async function buildTemplateDataForContract(
       createdAt: true,
       startDate: true,
       endDate: true,
+      subtotal: true,
       total: true,
       currency: true,
       customer: {

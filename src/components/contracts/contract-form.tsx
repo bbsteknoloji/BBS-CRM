@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState, useTransition } from "react";
+import React, { useCallback, useEffect, useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -63,26 +63,83 @@ export function ContractForm({
     d.startDate ?? today
   );
 
+  // startDate + 1 yıl hesapla (UTC güvenli)
+  function addOneYear(dateStr: string): string {
+    const d = new Date(dateStr + "T00:00:00Z");
+    d.setUTCFullYear(d.getUTCFullYear() + 1);
+    return d.toISOString().slice(0, 10);
+  }
+
+  const [endDate, setEndDate] = useState<string>(d.endDate ?? addOneYear(d.startDate ?? today));
+
   // Checkbox işaretliyken startDate, contractDate ile senkron
   useEffect(() => {
     if (startDateLinked) setStartDate(contractDate);
   }, [startDateLinked, contractDate]);
 
+  // startDate değişince endDate'i startDate + 1 yıl olarak güncelle
+  const prevStartRef = useRef(startDate);
+  useEffect(() => {
+    const prev = prevStartRef.current;
+    prevStartRef.current = startDate;
+    if (prev === startDate) return;
+    // Sadece endDate hâlâ eski startDate + 1 yıl ise (kullanıcı manuel değiştirmediyse) güncelle
+    if (endDate === addOneYear(prev) || endDate === "") {
+      setEndDate(addOneYear(startDate));
+    }
+  }, [startDate]);
+
   const filteredQuotes = customerId
     ? quotes.filter((q) => q.customerId === customerId)
     : quotes;
+
+  const FIELD_LABELS: Record<string, string> = {
+    title: "Başlık",
+    customerId: "Müşteri",
+    contractDate: "Sözleşme tarihi",
+    startDate: "Başlangıç tarihi",
+    endDate: "Bitiş tarihi",
+    renewalNoticeDays: "Yenileme süresi",
+    lineItems: "Sözleşme kalemleri",
+    currency: "Para birimi",
+    invoiceNumber: "Fatura No",
+    _form: "Form",
+  };
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const fd = new FormData(e.currentTarget);
     fd.set("deviceIds", JSON.stringify(deviceIds));
+
+    // disabled input'lar FormData'ya dahil edilmez — manuel ekle
+    if (startDateLinked) {
+      fd.set("startDate", startDate);
+    }
+
+    // Debug: gönderilen payload'u logla
+    console.log("[ContractForm] Submit payload:", Object.fromEntries(fd.entries()));
+
     startTransition(async () => {
       const result = await onSubmit(fd);
       if (result.success) {
         toast.success("Sözleşme kaydedildi");
         router.push(`/contracts/${result.data.id}`);
       } else {
-        toast.error(result.error);
+        // Detaylı hata logla
+        console.error("[ContractForm] Kayıt hatası:", result.error, result.fieldErrors);
+
+        const fe = result.fieldErrors;
+        if (fe && Object.keys(fe).length > 0) {
+          // Her alan için ayrı toast göster
+          for (const [field, messages] of Object.entries(fe)) {
+            const label = FIELD_LABELS[field] ?? field;
+            for (const msg of messages) {
+              toast.error(`${label}: ${msg}`);
+            }
+          }
+        } else {
+          toast.error(result.error);
+        }
       }
     });
   }
@@ -189,7 +246,8 @@ export function ContractForm({
             id="endDate"
             name="endDate"
             type="date"
-            defaultValue={d.endDate ?? ""}
+            value={endDate}
+            onChange={(e) => setEndDate(e.target.value)}
           />
         </div>
         <div className="space-y-2">

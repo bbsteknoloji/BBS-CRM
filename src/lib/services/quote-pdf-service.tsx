@@ -1,6 +1,7 @@
 import { renderToBuffer } from "@react-pdf/renderer";
 import { prisma } from "@/lib/db";
 import { QuotePdfDocument } from "@/lib/pdf/quote-pdf-document";
+import { ReferencedQuotePdfDocument } from "@/lib/pdf/referenced-quote-pdf-document";
 import { registerPdfFonts } from "@/lib/pdf/register-pdf-fonts";
 import { writeLocalFile } from "@/lib/storage/local-storage";
 import { buildQuotePdfData } from "./quote-pdf-data";
@@ -130,6 +131,53 @@ export async function generateQuotePdf(
       },
     });
   }
+
+  return { pdfVersionId: pdfVersion.id, buffer: Buffer.from(buffer) };
+}
+
+export async function generateReferencedQuotePdf(
+  quoteId: string,
+  userId: string
+): Promise<{ pdfVersionId: string; buffer: Buffer } | null> {
+  const data = await buildQuotePdfData(quoteId);
+  if (!data) return null;
+
+  const quote = await prisma.quote.findUnique({
+    where: { id: quoteId },
+    select: { version: true, number: true },
+  });
+  if (!quote) return null;
+
+  registerPdfFonts();
+
+  const buffer = await renderToBuffer(
+    <ReferencedQuotePdfDocument data={data} />
+  );
+
+  const fileName = `v${quote.version}-referenced-${Date.now()}.pdf`;
+  const relativePath = `quotes/${quoteId}/pdf/${fileName}`;
+  const stored = await writeLocalFile(relativePath, Buffer.from(buffer));
+
+  const versionKey = { quoteId, quoteVersion: quote.version };
+
+  const pdfVersion = await prisma.quotePdfVersion.upsert({
+    where: { quoteId_quoteVersion: versionKey },
+    create: {
+      quoteId,
+      quoteVersion: quote.version,
+      storageKey: stored.storageKey,
+      relativePath: stored.relativePath,
+      sizeBytes: buffer.length,
+      createdById: userId,
+    },
+    update: {
+      storageKey: stored.storageKey,
+      relativePath: stored.relativePath,
+      sizeBytes: buffer.length,
+      createdById: userId,
+    },
+    select: { id: true },
+  });
 
   return { pdfVersionId: pdfVersion.id, buffer: Buffer.from(buffer) };
 }

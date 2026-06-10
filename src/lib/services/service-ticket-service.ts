@@ -1,4 +1,5 @@
-import type { ActivityType, Prisma, ServiceTicketStatus } from "@prisma/client";
+import type { ActivityType, Currency, Prisma, ServiceTicketStatus } from "@prisma/client";
+import { calculateTotals } from "@/lib/quotes/calculations";
 import { prisma } from "@/lib/db";
 import { normalizeSearch } from "@/lib/utils/normalize-search";
 import type { SessionUser } from "@/lib/permissions/types";
@@ -16,6 +17,32 @@ import {
 } from "./service-ticket-state-machine";
 import { getCustomerForAccess } from "./customer-service";
 import { refreshCustomerHealthCache } from "./customer-health-service";
+
+async function upsertServiceTicketLineItems(
+  tx: Prisma.TransactionClient,
+  serviceTicketId: string,
+  items: { description: string; quantity: number; unit?: string; unitPrice: number; taxRate: number }[]
+) {
+  await tx.serviceTicketLineItem.deleteMany({ where: { serviceTicketId } });
+  if (!items.length) return;
+  await tx.serviceTicketLineItem.createMany({
+    data: items.map((item, i) => {
+      const qty = Number(item.quantity);
+      const price = Number(item.unitPrice);
+      const lineTotal = qty * price * (1 + Number(item.taxRate) / 100);
+      return {
+        serviceTicketId,
+        sortOrder: i,
+        description: item.description.trim(),
+        quantity: qty.toString(),
+        unit: item.unit || "adet",
+        unitPrice: price.toString(),
+        taxRate: item.taxRate.toString(),
+        lineTotal: lineTotal.toString(),
+      };
+    }),
+  });
+}
 
 export function buildServiceTicketAccessFilter(
   user: SessionUser
@@ -71,6 +98,10 @@ const LIST_SELECT = {
   title: true,
   status: true,
   priority: true,
+  serviceType: true,
+  systemType: true,
+  total: true,
+  currency: true,
   openedAt: true,
   createdAt: true,
   customer: { select: { id: true, legalName: true } },
@@ -88,9 +119,16 @@ function buildListWhere(
     ...buildServiceTicketAccessFilter(user),
   };
   if (query.status) where.status = query.status;
+  if (query.serviceType) where.serviceType = query.serviceType;
   if (query.priority) where.priority = query.priority;
   if (query.customerId) where.customerId = query.customerId;
   if (query.assignedUserId) where.assignedUserId = query.assignedUserId;
+  if (query.dateFrom) where.openedAt = { ...where.openedAt as object, gte: new Date(query.dateFrom) };
+  if (query.dateTo) {
+    const end = new Date(query.dateTo);
+    end.setHours(23, 59, 59, 999);
+    where.openedAt = { ...where.openedAt as object, lte: end };
+  }
   if (query.q?.trim()) {
     const term = normalizeSearch(query.q.trim());
     where.OR = [
@@ -191,16 +229,61 @@ export async function getServiceTicketDetail(
       description: true,
       status: true,
       priority: true,
+      serviceType: true,
+      systemType: true,
+      brand: true,
+      model: true,
+      serialNo: true,
+      location: true,
+      inventoryNo: true,
+      workDone: true,
+      techNotes: true,
+      currency: true,
+      subtotal: true,
+      taxTotal: true,
+      total: true,
       openedAt: true,
       closedAt: true,
       customer: {
-        select: { id: true, legalName: true, tradeName: true },
+        select: {
+          id: true,
+          legalName: true,
+          tradeName: true,
+          addresses: {
+            select: { line1: true, line2: true, city: true, district: true },
+            where: { type: "HEADQUARTERS" },
+            take: 1,
+          },
+          contacts: {
+            select: { fullName: true, phone: true, email: true },
+            where: { isPrimary: true },
+            take: 1,
+          },
+        },
       },
       contract: {
         select: { id: true, number: true, title: true },
       },
       assignedUser: {
         select: { id: true, firstName: true, lastName: true, email: true },
+      },
+      lineItems: {
+        select: {
+          id: true,
+          sortOrder: true,
+          description: true,
+          quantity: true,
+          unit: true,
+          unitPrice: true,
+          taxRate: true,
+          lineTotal: true,
+        },
+        orderBy: { sortOrder: "asc" },
+      },
+      pdfVersions: {
+        select: { id: true, version: true, createdAt: true, relativePath: true },
+        orderBy: { createdAt: "desc" },
+        take: 5,
       },
       createdBy: {
         select: { firstName: true, lastName: true },
@@ -252,21 +335,39 @@ export async function createServiceTicket(
 
   const ticketNo = await nextDocumentNumber("SERVICE");
   const assignedUserId = input.assignedUserId?.trim() || null;
+  const { subtotal, taxTotal, total } = calculateTotals(input.lineItems ?? []);
 
-  const ticket = await prisma.serviceTicket.create({
-    data: {
-      ticketNo,
-      customerId: input.customerId,
-      contractId,
-      title: input.title.trim(),
-      description: input.description?.trim() || null,
-      priority: input.priority,
-      status: "OPEN",
-      assignedUserId,
-      createdById: user.id,
-      updatedById: user.id,
-    },
-    select: { id: true, ticketNo: true, customerId: true },
+  const ticket = await prisma.$transaction(async (tx) => {
+    const created = await tx.serviceTicket.create({
+      data: {
+        ticketNo,
+        customerId: input.customerId,
+        contractId,
+        title: input.title.trim(),
+        description: input.description?.trim() || null,
+        workDone: input.workDone?.trim() || null,
+        techNotes: input.techNotes?.trim() || null,
+        priority: input.priority,
+        serviceType: input.serviceType,
+        systemType: input.systemType ?? null,
+        brand: input.brand?.trim() || null,
+        model: input.model?.trim() || null,
+        serialNo: input.serialNo?.trim() || null,
+        location: input.location?.trim() || null,
+        inventoryNo: input.inventoryNo?.trim() || null,
+        currency: (input.currency ?? "TRY") as Currency,
+        subtotal: subtotal.toString(),
+        taxTotal: taxTotal.toString(),
+        total: total.toString(),
+        status: "OPEN",
+        assignedUserId,
+        createdById: user.id,
+        updatedById: user.id,
+      },
+      select: { id: true, ticketNo: true, customerId: true },
+    });
+    await upsertServiceTicketLineItems(tx, created.id, input.lineItems ?? []);
+    return created;
   });
 
   await createAuditLog({
@@ -320,17 +421,34 @@ export async function updateServiceTicket(
   }
 
   const contractId = input.contractId?.trim() || null;
+  const { subtotal, taxTotal, total } = calculateTotals(input.lineItems ?? []);
 
-  await prisma.serviceTicket.update({
-    where: { id: serviceTicketId },
-    data: {
-      title: input.title.trim(),
-      customerId: input.customerId,
-      contractId,
-      description: input.description?.trim() || null,
-      priority: input.priority,
-      updatedById: user.id,
-    },
+  await prisma.$transaction(async (tx) => {
+    await tx.serviceTicket.update({
+      where: { id: serviceTicketId },
+      data: {
+        title: input.title.trim(),
+        customerId: input.customerId,
+        contractId,
+        description: input.description?.trim() || null,
+        workDone: input.workDone?.trim() || null,
+        techNotes: input.techNotes?.trim() || null,
+        priority: input.priority,
+        serviceType: input.serviceType,
+        systemType: input.systemType ?? null,
+        brand: input.brand?.trim() || null,
+        model: input.model?.trim() || null,
+        serialNo: input.serialNo?.trim() || null,
+        location: input.location?.trim() || null,
+        inventoryNo: input.inventoryNo?.trim() || null,
+        currency: (input.currency ?? "TRY") as Currency,
+        subtotal: subtotal.toString(),
+        taxTotal: taxTotal.toString(),
+        total: total.toString(),
+        updatedById: user.id,
+      },
+    });
+    await upsertServiceTicketLineItems(tx, serviceTicketId, input.lineItems ?? []);
   });
 
   await createAuditLog({
@@ -654,6 +772,9 @@ export async function listCustomerServiceTickets(
       title: true,
       status: true,
       priority: true,
+      serviceType: true,
+      total: true,
+      currency: true,
       openedAt: true,
     },
     orderBy: { openedAt: "desc" },

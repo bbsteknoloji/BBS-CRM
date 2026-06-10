@@ -16,8 +16,9 @@ import {
 import {
   SERVICE_TICKET_STATUS_LABELS,
   SERVICE_PRIORITY_LABELS,
+  SERVICE_TYPE_LABELS,
 } from "@/lib/services/service-ticket-state-machine";
-import type { ServiceTicketStatus } from "@prisma/client";
+import type { ServiceTicketStatus, ServiceType } from "@prisma/client";
 import type { TaskPriority } from "@prisma/client";
 import { useSearchInput } from "@/hooks/use-search-input";
 
@@ -76,6 +77,20 @@ export function ServiceTicketFilters({
               </SelectItem>
             )
           )}
+        </SelectContent>
+      </Select>
+      <Select
+        value={searchParams.get("serviceType") ?? "all"}
+        onValueChange={(v) => update({ serviceType: v === "all" ? undefined : v })}
+      >
+        <SelectTrigger className="w-full lg:w-[180px]">
+          <SelectValue placeholder="Servis Türü" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="all">Tüm türler</SelectItem>
+          {(Object.keys(SERVICE_TYPE_LABELS) as ServiceType[]).map((k) => (
+            <SelectItem key={k} value={k}>{SERVICE_TYPE_LABELS[k]}</SelectItem>
+          ))}
         </SelectContent>
       </Select>
       <Select

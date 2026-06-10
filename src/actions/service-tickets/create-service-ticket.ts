@@ -15,10 +15,14 @@ export async function createServiceTicketAction(
 ): Promise<ActionResult<{ id: string }>> {
   const user = await requirePermission("service:write");
   const raw = formDataToObject(formData);
+  const { parseServiceTicketLineItemsFromFormData } = await import("@/lib/validations/service-ticket");
+  const lineItems = parseServiceTicketLineItemsFromFormData(formData);
   const parsed = serviceTicketFormSchema.safeParse({
     ...raw,
     contractId: raw.contractId || undefined,
     assignedUserId: raw.assignedUserId || undefined,
+    systemType: raw.systemType || undefined,
+    lineItems,
   });
   if (!parsed.success) {
     return actionError("Form doğrulama hatası", parseFieldErrors(parsed.error));

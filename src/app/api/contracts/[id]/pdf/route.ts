@@ -61,8 +61,16 @@ export async function GET(request: Request, { params }: Params) {
       try { buffer = await readLocalFile(latest.relativePath); } catch { buffer = null; }
     }
     if (!buffer && hasPermission(user, "contract:write")) {
-      const gen = await generateContractPdf(contractId, userId);
-      buffer = gen?.buffer ?? null;
+      try {
+        const gen = await generateContractPdf(contractId, userId);
+        buffer = gen?.buffer ?? null;
+      } catch (err) {
+        console.error("[PDF route] generateContractPdf failed:", err);
+        return NextResponse.json(
+          { error: "PDF oluşturulamadı: " + (err instanceof Error ? err.message : String(err)) },
+          { status: 500 }
+        );
+      }
     }
   }
 
@@ -89,7 +97,7 @@ export async function GET(request: Request, { params }: Params) {
       "Content-Disposition": inline
         ? "inline"
         : `attachment; filename="${filename}"`,
-      "Cache-Control": "private, max-age=3600",
+      "Cache-Control": "no-store",
     },
   });
 }

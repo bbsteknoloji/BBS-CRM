@@ -48,7 +48,7 @@ function formatAmount(value: { toString(): string }, currency: string): string {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   }).format(n);
-  return `${formatted} ${currency === "TRY" ? "TL" : currency} (KDV Hariç)`;
+  return `${formatted} ${currency === "TRY" ? "TL" : currency}`;
 }
 
 function formatAddress(parts: {
@@ -74,6 +74,8 @@ export async function buildContractPdfData(
       createdAt: true,
       startDate: true,
       endDate: true,
+      subtotal: true,
+      taxTotal: true,
       total: true,
       currency: true,
       status: true,
@@ -140,7 +142,7 @@ export async function buildContractPdfData(
       contactName: contact?.fullName ?? null,
     },
 
-    contractAmount: formatAmount(contract.total, contract.currency),
+    contractAmount: formatAmount(contract.subtotal, contract.currency),
     invoiceNumber,
     devices: contract.contractDevices.map((cd) => cd.device),
 

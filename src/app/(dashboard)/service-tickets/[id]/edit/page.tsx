@@ -52,6 +52,23 @@ export default async function EditServiceTicketPage({ params }: Props) {
               description: ticket.description ?? "",
               priority: ticket.priority,
               assignedUserId: ticket.assignedUser?.id ?? "",
+              serviceType: ticket.serviceType as never,
+              systemType: (ticket.systemType ?? "") as never,
+              brand: ticket.brand ?? "",
+              model: ticket.model ?? "",
+              serialNo: ticket.serialNo ?? "",
+              location: ticket.location ?? "",
+              inventoryNo: ticket.inventoryNo ?? "",
+              workDone: ticket.workDone ?? "",
+              techNotes: ticket.techNotes ?? "",
+              currency: ticket.currency as never,
+              lineItems: ticket.lineItems.map((li) => ({
+                description: li.description,
+                quantity: Number(li.quantity.toString()),
+                unit: li.unit,
+                unitPrice: Number(li.unitPrice.toString()),
+                taxRate: Number(li.taxRate.toString()),
+              })),
             }}
             submitLabel="Kaydet"
             onSubmit={updateServiceTicketAction.bind(null, id)}

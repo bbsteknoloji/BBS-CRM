@@ -258,16 +258,19 @@ const s = StyleSheet.create({
   colSerial:  { width: "35%" },
 
   // ── İmza alanı ───────────────────────────────────────────────
+  // Yapı (her iki kutu aynı): Header → NameArea → Çizgi → "İmza/Kaşe" → StampArea
+  // NameArea sabit yükseklik → çizgiler her iki tarafta aynı Y koordinatında
+  // StampArea çizginin ALTINDA → imza/kaşe hiçbir zaman çizgiye dokunmaz
   signatureSection: {
     marginTop: 8,
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "flex-start",   // kutu yüksekliklerini birbirine eşitleme
+    // alignItems yok: her iki kutu aynı yapıda, hizalama otomatik
   },
   signatureBox: {
     width: "44%",
     alignItems: "center",
-    flexShrink: 0,              // dikey stretching engelle
+    flexShrink: 0,
   },
   signatureHeader: {
     backgroundColor: C.brandNavy,
@@ -287,39 +290,49 @@ const s = StyleSheet.create({
     fontSize: 8,
     color: C.muted,
     textAlign: "center",
-    marginBottom: 2,
   },
   signatureNameLine: {
     fontSize: 8.5,
     fontWeight: 700,
     color: C.text,
     textAlign: "center",
-    marginBottom: 2,
   },
+  // İsim alanı: sabit yükseklik → her iki tarafta çizgiler aynı Y'de
+  // Uzun kurum adı (2-3 satır) için yeterli yükseklik
+  sigNameArea: {
+    height: 38,
+    width: "100%",
+    alignItems: "center",
+    justifyContent: "center",
+    overflow: "hidden",
+  },
+  // Çizgi: ismin hemen altında, her iki tarafta aynı konumda
   signatureUnderline: {
     borderBottomWidth: 0.5,
     borderBottomColor: C.borderLight,
     width: "80%",
-    marginTop: 12,   // 28→12: fiziksel yazı alanını kompakt tut
-    marginBottom: 3,
-  },
-  stampImage: {
-    width: 105,
-    marginTop: 6,
-    marginBottom: 2,
-  },
-  signedBadge: {
-    backgroundColor: "#E8F5E9",
-    borderWidth: 1,
-    borderColor: "#43A047",
-    paddingHorizontal: 10,
-    paddingVertical: 4,
     marginTop: 4,
   },
-  signedBadgeText: {
-    fontSize: 8,
-    color: "#2E7D32",
-    fontWeight: 700,
+  // "İmza / Kaşe" etiketi
+  sigLabel: {
+    fontSize: 7,
+    color: C.muted,
+    marginTop: 3,
+    marginBottom: 3,
+  },
+  // Kaşe/imza alanı: çizginin ALTINDA, sabit yükseklik
+  // Sol (İdare) her zaman boş; Sağ (BBS) imzalıysa kaşe gösterir
+  sigStampArea: {
+    height: 114,
+    width: "100%",
+    alignItems: "center",
+    justifyContent: "flex-start",
+    paddingTop: 4,
+    overflow: "hidden",
+  },
+  // width:110 → yükseklik ≈ 107pt (327×320 oranı) → 114pt container'a sığar
+  stampImage: {
+    width: 110,
   },
 
   footer: {
@@ -456,7 +469,7 @@ export function ContractPdfDocument({ data }: { data: ContractPdfData }) {
           <View style={s.metaCard}>
             <View style={s.metaRow}>
               <Text style={s.metaLabel}>Sözleşme Bedeli</Text>
-              <Text style={s.metaValue}>{data.contractAmount}</Text>
+              <Text style={s.metaValue}>{data.contractAmount} <Text style={{ fontSize: 7, color: C.muted }}>(KDV Hariç)</Text></Text>
             </View>
             <View style={s.metaRow}>
               <Text style={s.metaLabel}>Fatura No</Text>
@@ -619,33 +632,44 @@ export function ContractPdfDocument({ data }: { data: ContractPdfData }) {
           </Text>
 
           <View style={s.signatureSection}>
-            {/* Sol: İdare (müşteri) */}
+            {/* ── Sol: İdare (müşteri) — her zaman tamamen boş ── */}
             <View style={s.signatureBox}>
               <View style={s.signatureHeader}>
                 <Text style={s.signatureTitle}>İdare</Text>
               </View>
-              <Text style={s.signatureNameLine}>{c.legalName}</Text>
-              {c.contactName && c.contactName.trim() !== c.legalName.trim() ? (
-                <Text style={s.signatureLine}>{c.contactName}</Text>
-              ) : null}
+              {/* İsim alanı: sabit yükseklik */}
+              <View style={s.sigNameArea}>
+                <Text style={s.signatureNameLine}>{c.legalName}</Text>
+                {c.contactName && c.contactName.trim() !== c.legalName.trim() ? (
+                  <Text style={s.signatureLine}>{c.contactName}</Text>
+                ) : null}
+              </View>
+              {/* Çizgi: ismin hemen altında, BBS tarafıyla aynı Y */}
               <View style={s.signatureUnderline} />
-              <Text style={{ fontSize: 7, color: C.muted }}>İmza / Kaşe</Text>
+              <Text style={s.sigLabel}>İmza / Kaşe</Text>
+              {/* Kaşe alanı: her zaman boş — kurumun fiziksel imzası için */}
+              <View style={s.sigStampArea} />
             </View>
 
-            {/* Sağ: BBS Teknoloji */}
+            {/* ── Sağ: BBS Teknoloji — dijital imza/kaşe çizginin altında ── */}
             <View style={s.signatureBox}>
               <View style={s.signatureHeader}>
                 <Text style={s.signatureTitle}>BBS Teknoloji</Text>
               </View>
-              <Text style={s.signatureNameLine}>Kadir Kurt</Text>
-              {/* Kaşe: yalnızca imzalandığında görünür, çizginin üstünde */}
-              {data.isSigned && data.stampImagePath ? (
-                // eslint-disable-next-line jsx-a11y/alt-text
-                <Image src={data.stampImagePath} style={s.stampImage} cache={false} />
-              ) : null}
-              {/* Çizgi ve etiket: imzalı/imzasız her durumda göster */}
+              {/* İsim alanı: sol tarafla aynı yükseklik */}
+              <View style={s.sigNameArea}>
+                <Text style={s.signatureNameLine}>Kadir Kurt</Text>
+              </View>
+              {/* Çizgi: ismin hemen altında */}
               <View style={s.signatureUnderline} />
-              <Text style={{ fontSize: 7, color: C.muted }}>İmza / Kaşe</Text>
+              <Text style={s.sigLabel}>İmza / Kaşe</Text>
+              {/* Kaşe alanı: imzalıysa kaşe gösterir, çizginin altında */}
+              <View style={s.sigStampArea}>
+                {data.isSigned && data.stampImagePath ? (
+                  // eslint-disable-next-line jsx-a11y/alt-text
+                  <Image src={data.stampImagePath} style={s.stampImage} cache={false} />
+                ) : null}
+              </View>
             </View>
           </View>
         </View>

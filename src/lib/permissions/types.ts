@@ -23,6 +23,8 @@ export const PERMISSIONS = [
   "service:assign",
   "service:close",
   "service:delete",
+  "service:pdf",
+  "service:cost",
   "visit:read",
   "visit:write",
   "task:read",

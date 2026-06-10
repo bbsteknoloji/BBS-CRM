@@ -58,3 +58,20 @@ Thumbs.db
 *.tmp
 *.temp
 .cache/
+
+# test / debug scripts (root level)
+test-*.ts
+test-*.pdf
+
+# disk analysis / cleanup reports (generated locally)
+D-*.csv
+D-*.md
+d-drive-*.csv
+d-drive-*.txt
+duplicate-files.csv
+duplicate-folders.csv
+large-files.csv
+media-folders.csv
+same-name-diff-content.csv
+_analysis-stats.json
+archive-plan.md

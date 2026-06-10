@@ -180,6 +180,28 @@ enum ServiceTicketStatus {
   CLOSED
 }
 
+enum ServiceType {
+  FAULT_RESPONSE
+  MAINTENANCE
+  INSTALLATION
+  CONFIGURATION
+  SYSTEM_UPDATE
+  ONSITE_SUPPORT
+  REMOTE_SUPPORT
+}
+
+enum SystemType {
+  FIREWALL
+  SWITCH
+  ACCESS_POINT
+  CAMERA_SYSTEM
+  NVR_DVR
+  SERVER
+  HOTSPOT_SYSTEM
+  NETWORK_INFRASTRUCTURE
+  OTHER
+}
+
 enum CustomerHealthStatus {
   HEALTHY
   WARNING
@@ -596,9 +618,10 @@ model Quote {
   number     String      @unique @db.VarChar(30)
   customerId String      @map("customer_id") @db.Uuid
   title      String      @db.VarChar(255)
-  status     QuoteStatus @default(DRAFT)
-  currency   Currency    @default(TRY)
-  version    Int         @default(1)
+  status        QuoteStatus @default(DRAFT)
+  currency      Currency    @default(TRY)
+  version       Int         @default(1)
+  quoteTemplate String      @default("STANDARD") @map("quote_template") @db.VarChar(30)
 
   validUntil  DateTime? @map("valid_until") @db.Date
   sentAt      DateTime? @map("sent_at") @db.Timestamptz(6)
@@ -784,7 +807,26 @@ model ServiceTicket {
   description    String?             @db.Text
   priority       TaskPriority        @default(MEDIUM)
   status         ServiceTicketStatus @default(OPEN)
+  serviceType    ServiceType         @default(FAULT_RESPONSE) @map("service_type")
   assignedUserId String?             @map("assigned_user_id") @db.Uuid
+
+  // Sistem / Cihaz bilgileri
+  systemType   SystemType? @map("system_type")
+  brand        String?     @db.VarChar(100)
+  model        String?     @db.VarChar(100)
+  serialNo     String?     @map("serial_no") @db.VarChar(100)
+  location     String?     @db.VarChar(255)
+  inventoryNo  String?     @map("inventory_no") @db.VarChar(100)
+
+  // Teknik içerik
+  workDone   String? @map("work_done") @db.Text
+  techNotes  String? @map("tech_notes") @db.Text
+
+  // Finansal
+  currency Currency @default(TRY)
+  subtotal Decimal  @default(0) @db.Decimal(18, 4)
+  taxTotal Decimal  @default(0) @map("tax_total") @db.Decimal(18, 4)
+  total    Decimal  @default(0) @db.Decimal(18, 4)
 
   openedAt DateTime  @default(now()) @map("opened_at") @db.Timestamptz(6)
   closedAt DateTime? @map("closed_at") @db.Timestamptz(6)
@@ -801,6 +843,8 @@ model ServiceTicket {
   createdBy    User?     @relation("ServiceTicketCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
   updatedBy    User?     @relation("ServiceTicketUpdatedBy", fields: [updatedById], references: [id], onDelete: SetNull)
 
+  lineItems    ServiceTicketLineItem[]
+  pdfVersions  ServiceTicketPdfVersion[]
   activities   Activity[]
   visitRecords VisitRecord[]
 
@@ -808,9 +852,44 @@ model ServiceTicket {
   @@index([assignedUserId, status])
   @@index([status, openedAt(sort: Desc)])
   @@index([contractId])
+  @@index([serviceType])
   @@index([deletedAt])
   @@index([createdAt(sort: Desc)])
   @@map("service_tickets")
+}
+
+model ServiceTicketLineItem {
+  id              String  @id @default(uuid()) @db.Uuid
+  serviceTicketId String  @map("service_ticket_id") @db.Uuid
+  sortOrder       Int     @default(0) @map("sort_order")
+  description     String  @db.VarChar(500)
+  quantity        Decimal @db.Decimal(12, 4)
+  unit            String  @default("adet") @db.VarChar(30)
+  unitPrice       Decimal @map("unit_price") @db.Decimal(18, 4)
+  taxRate         Decimal @map("tax_rate") @db.Decimal(5, 2)
+  lineTotal       Decimal @map("line_total") @db.Decimal(18, 4)
+
+  serviceTicket ServiceTicket @relation(fields: [serviceTicketId], references: [id], onDelete: Cascade)
+
+  @@index([serviceTicketId])
+  @@map("service_ticket_line_items")
+}
+
+model ServiceTicketPdfVersion {
+  id              String   @id @default(uuid()) @db.Uuid
+  serviceTicketId String   @map("service_ticket_id") @db.Uuid
+  version         Int      @default(1)
+  storageKey      String   @map("storage_key") @db.VarChar(500)
+  relativePath    String   @map("relative_path") @db.VarChar(500)
+  sizeBytes       Int      @default(0) @map("size_bytes")
+  mimeType        String   @default("application/pdf") @map("mime_type") @db.VarChar(100)
+  createdAt       DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  createdById     String?  @map("created_by_id") @db.Uuid
+
+  serviceTicket ServiceTicket @relation(fields: [serviceTicketId], references: [id], onDelete: Cascade)
+
+  @@index([serviceTicketId])
+  @@map("service_ticket_pdf_versions")
 }
 
 model VisitRecord {

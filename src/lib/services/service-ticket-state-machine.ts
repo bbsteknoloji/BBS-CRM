@@ -42,3 +42,25 @@ export const SERVICE_PRIORITY_LABELS: Record<string, string> = {
   HIGH: "Yüksek",
   URGENT: "Acil",
 };
+
+export const SERVICE_TYPE_LABELS: Record<string, string> = {
+  FAULT_RESPONSE: "Arıza Müdahalesi",
+  MAINTENANCE: "Bakım",
+  INSTALLATION: "Kurulum",
+  CONFIGURATION: "Konfigürasyon",
+  SYSTEM_UPDATE: "Sistem Güncelleme",
+  ONSITE_SUPPORT: "Yerinde Destek",
+  REMOTE_SUPPORT: "Uzaktan Destek",
+};
+
+export const SYSTEM_TYPE_LABELS: Record<string, string> = {
+  FIREWALL: "Firewall",
+  SWITCH: "Switch",
+  ACCESS_POINT: "Access Point",
+  CAMERA_SYSTEM: "Kamera Sistemi",
+  NVR_DVR: "NVR / DVR",
+  SERVER: "Sunucu",
+  HOTSPOT_SYSTEM: "Hotspot Sistemi",
+  NETWORK_INFRASTRUCTURE: "Network Altyapısı",
+  OTHER: "Diğer",
+};

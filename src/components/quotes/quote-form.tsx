@@ -34,6 +34,9 @@ export function QuoteForm({
   const [currency, setCurrency] = useState<"TRY" | "USD" | "EUR">(
     (defaultValues?.currency as "TRY" | "USD" | "EUR") ?? "TRY"
   );
+  const [quoteTemplate, setQuoteTemplate] = useState<"STANDARD" | "REFERENCED">(
+    (defaultValues?.quoteTemplate as "STANDARD" | "REFERENCED") ?? "STANDARD"
+  );
   const d = defaultValues ?? {};
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -64,6 +67,41 @@ export function QuoteForm({
   return (
     <form onSubmit={handleSubmit} className="max-w-4xl space-y-8">
       <section className="grid gap-4 sm:grid-cols-2">
+        {/* Teklif tipi */}
+        <div className="space-y-2 sm:col-span-2">
+          <Label>Teklif Tipi</Label>
+          <input type="hidden" name="quoteTemplate" value={quoteTemplate} />
+          <div className="flex gap-3">
+            <button
+              type="button"
+              onClick={() => setQuoteTemplate("STANDARD")}
+              className={`flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-medium transition-colors ${
+                quoteTemplate === "STANDARD"
+                  ? "border-primary bg-primary text-primary-foreground"
+                  : "border-input bg-background hover:bg-accent"
+              }`}
+            >
+              📄 Standart Teklif
+            </button>
+            <button
+              type="button"
+              onClick={() => setQuoteTemplate("REFERENCED")}
+              className={`flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-medium transition-colors ${
+                quoteTemplate === "REFERENCED"
+                  ? "border-primary bg-primary text-primary-foreground"
+                  : "border-input bg-background hover:bg-accent"
+              }`}
+            >
+              🏆 Referanslı Teklif
+            </button>
+          </div>
+          {quoteTemplate === "REFERENCED" && (
+            <p className="text-xs text-muted-foreground">
+              Referanslı teklif; teklif sayfası + koşullar + 7 kategorili referans listesi içerir (sabit şablon).
+            </p>
+          )}
+        </div>
+
         <div className="space-y-2 sm:col-span-2">
           <Label htmlFor="title">Başlık *</Label>
           <Input

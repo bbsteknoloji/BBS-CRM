@@ -1,7 +1,7 @@
 "use client";
 
 import { signOut } from "next-auth/react";
-import { LogOut } from "lucide-react";
+import { LogOut, User, KeyRound, UserCircle, ChevronDown } from "lucide-react";
 import { ThemeToggle } from "@/components/theme/theme-toggle";
 import { PremiumPageHeaderBar } from "@/components/premium/premium-page-header";
 import { MobileSidebar } from "./mobile-sidebar";
@@ -14,7 +14,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import type { NavItem } from "@/config/navigation";
 
 type HeaderClientProps = {
@@ -24,16 +23,20 @@ type HeaderClientProps = {
   pageActions?: React.ReactNode;
   userName: string;
   userEmail: string;
+  userRole: string;
   navItems: NavItem[];
 };
 
-function initials(name: string) {
-  return name
-    .split(" ")
-    .map((n) => n[0])
-    .join("")
-    .slice(0, 2)
-    .toUpperCase();
+const ROLE_LABELS: Record<string, string> = {
+  SUPER_ADMIN: "Süper Admin",
+  ADMIN: "Yönetici",
+  MANAGER: "Müdür",
+  STAFF: "Personel",
+  VIEWER: "İzleyici",
+};
+
+function roleLabel(code: string) {
+  return ROLE_LABELS[code] ?? code;
 }
 
 export function HeaderClient({
@@ -43,6 +46,7 @@ export function HeaderClient({
   pageActions,
   userName,
   userEmail,
+  userRole,
   navItems,
 }: HeaderClientProps) {
   return (
@@ -61,24 +65,59 @@ export function HeaderClient({
           <ThemeToggle />
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="relative h-9 w-9 rounded-full">
-                <Avatar className="h-9 w-9">
-                  <AvatarFallback>{initials(userName || "?")}</AvatarFallback>
-                </Avatar>
+              <Button
+                variant="outline"
+                size="sm"
+                className="flex h-9 items-center gap-1.5 rounded-lg px-3 text-left"
+              >
+                <User className="h-4 w-4 shrink-0 text-muted-foreground" />
+                <span className="hidden flex-col items-start sm:flex">
+                  <span className="text-sm font-medium leading-tight">
+                    {userName || "Hesabım"}
+                  </span>
+                  {userRole ? (
+                    <span className="text-[11px] font-normal leading-tight text-muted-foreground">
+                      {roleLabel(userRole)}
+                    </span>
+                  ) : null}
+                </span>
+                <ChevronDown className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56">
+            <DropdownMenuContent align="end" className="w-60">
               <DropdownMenuLabel className="font-normal">
-                <p className="text-sm font-medium">{userName}</p>
-                <p className="text-xs text-muted-foreground">{userEmail}</p>
+                <div className="flex flex-col gap-0.5">
+                  <p className="text-sm font-semibold leading-tight">
+                    {userName}
+                  </p>
+                  {userRole ? (
+                    <p className="text-xs font-medium text-primary">
+                      {userRole}
+                    </p>
+                  ) : null}
+                  <p className="text-xs text-muted-foreground">{userEmail}</p>
+                </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
+              <DropdownMenuItem className="cursor-pointer gap-2" asChild>
+                <a href="/profile">
+                  <UserCircle className="h-4 w-4 text-muted-foreground" />
+                  Profil
+                </a>
+              </DropdownMenuItem>
+              <DropdownMenuItem className="cursor-pointer gap-2" asChild>
+                <a href="/profile/change-password">
+                  <KeyRound className="h-4 w-4 text-muted-foreground" />
+                  Şifre Değiştir
+                </a>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
               <DropdownMenuItem
-                className="cursor-pointer text-destructive focus:text-destructive"
+                className="cursor-pointer gap-2 text-destructive focus:bg-destructive/10 focus:text-destructive"
                 onClick={() => signOut({ callbackUrl: "/login" })}
               >
-                <LogOut className="mr-2 h-4 w-4" />
-                Çıkış yap
+                <LogOut className="h-4 w-4" />
+                🚪 Güvenli Çıkış Yap
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

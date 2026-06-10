@@ -28,6 +28,7 @@ export async function Header({
       pageActions={pageActions}
       userName={user?.name ?? ""}
       userEmail={user?.email ?? ""}
+      userRole={user?.roles?.[0] ?? ""}
       navItems={navItems}
     />
   );

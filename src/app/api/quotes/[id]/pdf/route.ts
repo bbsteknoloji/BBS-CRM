@@ -3,7 +3,7 @@ import { auth } from "@/auth";
 import { hasPermission } from "@/lib/permissions/check";
 import { getQuoteAccess } from "@/lib/services/quote-service";
 import { quotePdfDownloadFilename } from "@/lib/pdf/quote-pdf-filename";
-import { generateQuotePdf } from "@/lib/services/quote-pdf-service";
+import { generateQuotePdf, generateReferencedQuotePdf } from "@/lib/services/quote-pdf-service";
 import { readLocalFile } from "@/lib/storage/local-storage";
 import { prisma } from "@/lib/db";
 
@@ -47,9 +47,22 @@ export async function GET(request: Request, { params }: Params) {
     });
     if (row) buffer = await readLocalFile(row.relativePath);
   } else if (regenerate && hasPermission(user, "quote:write")) {
-    const gen = await generateQuotePdf(quoteId, userId);
+    const quoteRow = await prisma.quote.findFirst({
+      where: { id: quoteId, deletedAt: null },
+      select: { quoteTemplate: true },
+    });
+    const gen = quoteRow?.quoteTemplate === "REFERENCED"
+      ? await generateReferencedQuotePdf(quoteId, userId)
+      : await generateQuotePdf(quoteId, userId);
     buffer = gen?.buffer ?? null;
   } else {
+    // quoteTemplate'e göre doğru PDF versiyonunu bul veya oluştur
+    const quoteRow = await prisma.quote.findFirst({
+      where: { id: quoteId, deletedAt: null },
+      select: { quoteTemplate: true },
+    });
+    const isReferenced = quoteRow?.quoteTemplate === "REFERENCED";
+
     const latest = await prisma.quotePdfVersion.findFirst({
       where: { quoteId },
       orderBy: { createdAt: "desc" },
@@ -58,7 +71,9 @@ export async function GET(request: Request, { params }: Params) {
     if (latest) {
       buffer = await readLocalFile(latest.relativePath);
     } else if (hasPermission(user, "quote:write")) {
-      const gen = await generateQuotePdf(quoteId, userId);
+      const gen = isReferenced
+        ? await generateReferencedQuotePdf(quoteId, userId)
+        : await generateQuotePdf(quoteId, userId);
       buffer = gen?.buffer ?? null;
     }
   }

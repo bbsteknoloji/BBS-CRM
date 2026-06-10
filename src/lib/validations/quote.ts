@@ -33,10 +33,13 @@ export const quoteLineItemSchema = z.object({
   taxRate: z.coerce.number().min(0).max(100),
 });
 
+export const quoteTemplateEnum = z.enum(["STANDARD", "REFERENCED"]);
+
 export const quoteFormSchema = z.object({
   title: z.string().min(2, "Başlık gerekli").max(255),
   customerId: z.string().uuid("Müşteri seçin"),
   currency: currencyEnum.default("TRY"),
+  quoteTemplate: quoteTemplateEnum.default("STANDARD"),
   validUntil: z.string().optional().or(z.literal("")),
   notes: z.string().max(5000).optional().or(z.literal("")),
   terms: z.string().max(5000).optional().or(z.literal("")),

@@ -195,6 +195,7 @@ export async function getQuoteDetail(user: SessionUser, quoteId: string) {
       title: true,
       status: true,
       currency: true,
+      quoteTemplate: true,
       version: true,
       validUntil: true,
       sentAt: true,
@@ -252,6 +253,7 @@ export async function getQuoteForPdf(quoteId: string) {
       title: true,
       version: true,
       currency: true,
+      quoteTemplate: true,
       validUntil: true,
       createdAt: true,
       subtotal: true,
@@ -370,6 +372,7 @@ export async function createQuote(
         customerId: input.customerId,
         title: input.title.trim(),
         currency: input.currency,
+        quoteTemplate: input.quoteTemplate ?? "STANDARD",
         validUntil: input.validUntil
           ? new Date(input.validUntil)
           : null,
@@ -437,6 +440,7 @@ export async function updateQuote(
         title: input.title.trim(),
         customerId: input.customerId,
         currency: input.currency,
+        quoteTemplate: input.quoteTemplate ?? "STANDARD",
         validUntil: input.validUntil
           ? new Date(input.validUntil)
           : null,
@@ -926,6 +930,7 @@ export function quoteToFormInput(
     title: quote.title,
     customerId: quote.customer.id,
     currency: quote.currency,
+    quoteTemplate: (quote.quoteTemplate as "STANDARD" | "REFERENCED") ?? "STANDARD",
     validUntil: quote.validUntil
       ? quote.validUntil.toISOString().slice(0, 10)
       : "",

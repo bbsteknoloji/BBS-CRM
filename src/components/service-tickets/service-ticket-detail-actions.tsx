@@ -37,6 +37,7 @@ type Props = {
   canAssign: boolean;
   canClose: boolean;
   canDelete: boolean;
+  canPdf: boolean;
   users: UserOption[];
 };
 
@@ -48,6 +49,7 @@ export function ServiceTicketDetailActions({
   canAssign,
   canClose,
   canDelete,
+  canPdf,
   users,
 }: Props) {
   const router = useRouter();
@@ -211,6 +213,26 @@ export function ServiceTicketDetailActions({
             </form>
           </DialogContent>
         </Dialog>
+      ) : null}
+
+      {canPdf ? (
+        <Button variant="outline" size="sm" asChild>
+          <a
+            href={`/api/service-tickets/${serviceTicketId}/pdf?inline=1&regenerate=1`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            PDF Önizle
+          </a>
+        </Button>
+      ) : null}
+
+      {canPdf ? (
+        <Button variant="outline" size="sm" asChild>
+          <a href={`/api/service-tickets/${serviceTicketId}/pdf?download=1&regenerate=1`}>
+            PDF İndir
+          </a>
+        </Button>
       ) : null}
 
       {canDelete ? (
