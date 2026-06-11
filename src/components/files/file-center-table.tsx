@@ -13,7 +13,7 @@ import { FileModuleBadge } from "./file-module-badge";
 import { FileTypeBadge } from "./file-type-badge";
 import { FileDetailPanel } from "./file-detail-panel";
 import { deleteFileAction } from "@/actions/files/delete-file";
-import { ExternalLink, Download, Info } from "lucide-react";
+import { ExternalLink, Download, Info, Trash2 } from "lucide-react";
 
 type Props = {
   items: FileCenterItem[];
@@ -121,20 +121,111 @@ export function FileCenterTable({ items, canDownload, canDelete }: Props) {
             >
               <Info className="h-4 w-4" />
             </PremiumTableIconButton>
+            {canDelete && row.original.canDelete ? (
+              <PremiumTableIconButton
+                title="Sil"
+                className={`hover:bg-destructive/10 hover:text-destructive${pending ? " opacity-50 pointer-events-none" : ""}`}
+                onClick={() => handleDelete(row.original.id)}
+              >
+                <Trash2 className="h-4 w-4" />
+              </PremiumTableIconButton>
+            ) : null}
           </div>
         ),
       },
     ],
-    [canDownload]
+    [canDownload, canDelete, pending]
   );
 
   return (
     <>
-      <PremiumDataTable
-        data={items}
-        columns={columns}
-        className="min-w-[720px]"
-      />
+      {/* Mobil kart görünümü */}
+      <div className="space-y-2 sm:hidden">
+        {items.length === 0 ? (
+          <p className="py-8 text-center text-sm text-muted-foreground">
+            Kayıt bulunamadı.
+          </p>
+        ) : (
+          items.map((item) => (
+            <div
+              key={item.id}
+              className="glass-panel glass-panel-hover rounded-lg p-3 space-y-2"
+            >
+              <div className="flex items-start justify-between gap-2">
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    <span className="font-medium text-sm truncate">
+                      {item.fileName}
+                    </span>
+                    <FileTypeBadge fileType={item.fileType} variant="premium" />
+                  </div>
+                  <Link
+                    href={`/customers/${item.customerId}`}
+                    className="text-xs text-muted-foreground hover:underline"
+                  >
+                    {item.customerName}
+                  </Link>
+                </div>
+                <FileModuleBadge module={item.module} variant="premium" />
+              </div>
+              <div className="grid grid-cols-2 gap-x-3 gap-y-0.5 text-xs">
+                <span className="text-muted-foreground">Boyut</span>
+                <span className="tabular-nums">{formatFileSize(item.sizeBytes)}</span>
+                <span className="text-muted-foreground">Tarih</span>
+                <span>{format(item.createdAt, "date")}</span>
+                {item.uploadedBy && (
+                  <>
+                    <span className="text-muted-foreground">Yükleyen</span>
+                    <span>
+                      {item.uploadedBy.firstName} {item.uploadedBy.lastName}
+                    </span>
+                  </>
+                )}
+              </div>
+              <div className="flex items-center gap-1 pt-1.5 border-t border-border/40">
+                <PremiumTableIconButton
+                  href={item.viewUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  title="Görüntüle"
+                >
+                  <ExternalLink className="h-4 w-4" />
+                </PremiumTableIconButton>
+                {canDownload && (
+                  <PremiumTableIconButton href={item.downloadUrl} title="İndir">
+                    <Download className="h-4 w-4" />
+                  </PremiumTableIconButton>
+                )}
+                <PremiumTableIconButton
+                  title="Detay"
+                  onClick={() => setSelected(item)}
+                >
+                  <Info className="h-4 w-4" />
+                </PremiumTableIconButton>
+                {canDelete && item.canDelete && (
+                  <PremiumTableIconButton
+                    title="Sil"
+                    className={`hover:bg-destructive/10 hover:text-destructive${pending ? " opacity-50 pointer-events-none" : ""}`}
+                    onClick={() => handleDelete(item.id)}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </PremiumTableIconButton>
+                )}
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+
+      {/* Masaüstü tablo görünümü */}
+      <div className="hidden sm:block">
+        <PremiumDataTable
+          data={items}
+          columns={columns}
+          className="min-w-[720px]"
+        />
+      </div>
+
       <FileDetailPanel
         item={selected}
         onClose={() => setSelected(null)}

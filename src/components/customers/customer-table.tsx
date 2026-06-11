@@ -123,5 +123,57 @@ type Props = {
 };
 
 export function CustomerTable({ data }: Props) {
-  return <PremiumDataTable data={data} columns={columns} />;
+  return (
+    <>
+      {/* Mobil kart görünümü */}
+      <div className="space-y-2 sm:hidden">
+        {data.length === 0 ? (
+          <p className="py-8 text-center text-sm text-muted-foreground">
+            Kayıt bulunamadı.
+          </p>
+        ) : (
+          data.map((item) => (
+            <div
+              key={item.id}
+              className="glass-panel glass-panel-hover rounded-lg p-3 space-y-2"
+            >
+              <div className="flex items-start justify-between gap-2">
+                <div className="min-w-0 flex-1">
+                  <Link
+                    href={`/customers/${item.id}`}
+                    className="font-medium hover:underline block truncate"
+                  >
+                    {item.legalName}
+                  </Link>
+                  {item.tradeName && (
+                    <p className="text-xs text-muted-foreground truncate">
+                      {item.tradeName}
+                    </p>
+                  )}
+                </div>
+                <CustomerStatusBadge status={item.status} />
+              </div>
+              <div className="grid grid-cols-2 gap-x-3 gap-y-0.5 text-xs">
+                <span className="text-muted-foreground">Şehir</span>
+                <span>{item.city?.trim() || "—"}</span>
+                <span className="text-muted-foreground">Vergi No</span>
+                <span className="font-mono">{item.taxNumber || "—"}</span>
+                {item.deviceCount > 0 && (
+                  <>
+                    <span className="text-muted-foreground">Cihaz</span>
+                    <span>{item.deviceCount} cihaz</span>
+                  </>
+                )}
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+
+      {/* Masaüstü tablo görünümü */}
+      <div className="hidden sm:block">
+        <PremiumDataTable data={data} columns={columns} />
+      </div>
+    </>
+  );
 }
