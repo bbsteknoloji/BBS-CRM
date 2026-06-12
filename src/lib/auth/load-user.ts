@@ -59,6 +59,9 @@ export async function loadUserByEmail(
   };
 }
 
+const DUMMY_HASH =
+  "$2a$12$LQv3c1yqBWVHxkd0LQ1Cr.WVDLdClh1TUkBx3LxzE7x6jD0yBHFG2";
+
 export async function verifyCredentials(
   email: string,
   password: string
@@ -72,7 +75,10 @@ export async function verifyCredentials(
     select: { id: true, passwordHash: true },
   });
 
-  if (!user) return null;
+  if (!user) {
+    await bcrypt.compare(password, DUMMY_HASH);
+    return null;
+  }
 
   const valid = await bcrypt.compare(password, user.passwordHash);
   if (!valid) return null;

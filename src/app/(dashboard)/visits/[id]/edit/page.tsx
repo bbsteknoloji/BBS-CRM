@@ -35,7 +35,7 @@ export default async function EditVisitPage({ params }: Props) {
     listCustomersForVisitSelect(user),
     listContractsForVisitSelect(user, visit.customer.id),
     listServiceTicketsForVisitSelect(user, visit.customer.id),
-    listUsersForVisitAssign(),
+    listUsersForVisitAssign(user),
   ]);
 
   const boundUpdate = updateVisitAction.bind(null, id);

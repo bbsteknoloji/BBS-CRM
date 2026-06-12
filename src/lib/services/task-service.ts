@@ -266,9 +266,13 @@ export async function deleteTask(user: SessionUser, taskId: string) {
   return true;
 }
 
-export async function listUsersForTaskAssign() {
+export async function listUsersForTaskAssign(user: SessionUser) {
+  const where: Prisma.UserWhereInput = { deletedAt: null, status: "ACTIVE" };
+  if (!isSuperAdmin(user) && user.companyId) {
+    where.companyId = user.companyId;
+  }
   return prisma.user.findMany({
-    where: { deletedAt: null, status: "ACTIVE" },
+    where,
     select: { id: true, firstName: true, lastName: true },
     orderBy: [{ firstName: "asc" }, { lastName: "asc" }],
     take: 200,
@@ -276,13 +280,15 @@ export async function listUsersForTaskAssign() {
 }
 
 export async function listCustomersForTaskSelect(user: SessionUser) {
-  const filter =
-    isSuperAdmin(user) || hasRole(user, "ADMIN")
+  const cf = !isSuperAdmin(user) && user.companyId ? { companyId: user.companyId } : {};
+  const filter: Prisma.CustomerWhereInput =
+    isSuperAdmin(user)
       ? { deletedAt: null }
-      : hasRole(user, "VIEWER")
-        ? { deletedAt: null }
+      : hasRole(user, "ADMIN") || hasRole(user, "VIEWER")
+        ? { deletedAt: null, ...cf }
         : {
             deletedAt: null,
+            ...cf,
             OR: [
               { assignedToId: user.id },
               { createdById: user.id },

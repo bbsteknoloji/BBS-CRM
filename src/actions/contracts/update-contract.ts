@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { requirePermission } from "@/lib/permissions/server";
+import { z } from "zod";
 import {
   contractFormSchema,
   formDataToObject,
@@ -31,7 +32,15 @@ export async function updateContractAction(
   formData: FormData
 ): Promise<ActionResult<{ id: string }>> {
   const user = await requirePermission("contract:write");
-  const parsed = parseFormData(formData);
+  let parsed: ReturnType<typeof parseFormData>;
+  try {
+    parsed = parseFormData(formData);
+  } catch (e) {
+    if (e instanceof z.ZodError) {
+      return actionError("Form doğrulama hatası", parseFieldErrors(e));
+    }
+    throw e;
+  }
   if (!parsed.success) {
     return actionError("Form doğrulama hatası", parseFieldErrors(parsed.error));
   }

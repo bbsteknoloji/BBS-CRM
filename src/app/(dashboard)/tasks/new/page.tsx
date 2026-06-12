@@ -27,7 +27,7 @@ export default async function NewTaskPage({ searchParams }: Props) {
     listCustomersForTaskSelect(user),
     listQuotesForTaskSelect(user, customerId),
     listContractsForTaskSelect(user, customerId),
-    listUsersForTaskAssign(),
+    listUsersForTaskAssign(user),
   ]);
 
   return (

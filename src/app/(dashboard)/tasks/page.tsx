@@ -54,7 +54,7 @@ async function TaskListContent({
   const query = taskListQuerySchema.parse(raw);
   const [list, users] = await Promise.all([
     listTasks(user, query),
-    listUsersForTaskAssign(),
+    listUsersForTaskAssign(user),
   ]);
   const hasFilters = !!(
     query.q ||

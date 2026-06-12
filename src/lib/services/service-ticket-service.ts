@@ -712,16 +712,20 @@ export async function listServiceTicketAuditLogs(
 }
 
 export async function listCustomersForServiceSelect(user: SessionUser) {
-  const filter =
-    isSuperAdmin(user) || hasRole(user, "ADMIN")
+  const cf = !isSuperAdmin(user) && user.companyId ? { companyId: user.companyId } : {};
+  const filter: Prisma.CustomerWhereInput =
+    isSuperAdmin(user)
       ? { deletedAt: null }
-      : {
-          deletedAt: null,
-          OR: [
-            { assignedToId: user.id },
-            { createdById: user.id },
-          ],
-        };
+      : hasRole(user, "ADMIN")
+        ? { deletedAt: null, ...cf }
+        : {
+            deletedAt: null,
+            ...cf,
+            OR: [
+              { assignedToId: user.id },
+              { createdById: user.id },
+            ],
+          };
 
   return prisma.customer.findMany({
     where: filter,
@@ -747,9 +751,13 @@ export async function listContractsForServiceSelect(
   });
 }
 
-export async function listUsersForServiceAssign() {
+export async function listUsersForServiceAssign(user: SessionUser) {
+  const where: Prisma.UserWhereInput = { deletedAt: null, status: "ACTIVE" };
+  if (!isSuperAdmin(user) && user.companyId) {
+    where.companyId = user.companyId;
+  }
   return prisma.user.findMany({
-    where: { deletedAt: null, status: "ACTIVE" },
+    where,
     select: { id: true, firstName: true, lastName: true, email: true },
     orderBy: [{ firstName: "asc" }, { lastName: "asc" }],
     take: 200,
@@ -791,7 +799,7 @@ export async function deleteServiceTicket(
   serviceTicketId: string
 ): Promise<string | null> {
   const existing = await prisma.serviceTicket.findFirst({
-    where: { id: serviceTicketId, deletedAt: null },
+    where: { id: serviceTicketId, deletedAt: null, ...buildServiceTicketAccessFilter(user) },
     select: { id: true, ticketNo: true, status: true },
   });
   if (!existing) return null;

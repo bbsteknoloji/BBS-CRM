@@ -118,12 +118,15 @@ export function parseLineItemsFromFormData(
 ): z.infer<typeof contractLineItemSchema>[] {
   const raw = formData.get("lineItems");
   if (typeof raw !== "string") return [];
+  let parsed: unknown;
   try {
-    const parsed = JSON.parse(raw) as unknown;
-    return z.array(contractLineItemSchema).parse(parsed);
+    parsed = JSON.parse(raw);
   } catch {
     return [];
   }
+  const result = z.array(contractLineItemSchema).safeParse(parsed);
+  if (!result.success) throw result.error;
+  return result.data;
 }
 
 export function parseDeviceIdsFromFormData(formData: FormData): string[] {

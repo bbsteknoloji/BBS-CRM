@@ -33,7 +33,7 @@ export default async function NewVisitPage({ searchParams }: Props) {
     sp.customerId
       ? listServiceTicketsForVisitSelect(user, sp.customerId)
       : Promise.resolve([]),
-    listUsersForVisitAssign(),
+    listUsersForVisitAssign(user),
   ]);
 
   return (

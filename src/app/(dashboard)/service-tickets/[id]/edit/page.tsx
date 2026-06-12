@@ -30,7 +30,7 @@ export default async function EditServiceTicketPage({ params }: Props) {
   const [customers, contracts, users] = await Promise.all([
     listCustomersForServiceSelect(user),
     listContractsForServiceSelect(user, ticket.customer.id),
-    listUsersForServiceAssign(),
+    listUsersForServiceAssign(user),
   ]);
 
   return (

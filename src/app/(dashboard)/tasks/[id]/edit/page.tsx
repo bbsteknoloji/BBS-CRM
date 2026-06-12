@@ -40,7 +40,7 @@ export default async function EditTaskPage({ params, searchParams }: Props) {
     listCustomersForTaskSelect(user),
     listQuotesForTaskSelect(user, customerId),
     listContractsForTaskSelect(user, customerId),
-    listUsersForTaskAssign(),
+    listUsersForTaskAssign(user),
   ]);
 
   const boundUpdate = updateTaskAction.bind(null, id);

@@ -25,6 +25,10 @@ export async function writeLocalFile(
 }
 
 export async function readLocalFile(relativePath: string): Promise<Buffer> {
-  const root = getUploadRoot();
-  return readFile(path.join(root, relativePath));
+  const root = path.resolve(getUploadRoot());
+  const absolute = path.resolve(path.join(root, relativePath));
+  if (!absolute.startsWith(root + path.sep) && absolute !== root) {
+    throw new Error("Dosya erişim hatası");
+  }
+  return readFile(absolute);
 }

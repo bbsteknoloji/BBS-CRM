@@ -25,7 +25,7 @@ export default async function NewServiceTicketPage({ searchParams }: Props) {
     sp.customerId
       ? listContractsForServiceSelect(user, sp.customerId)
       : Promise.resolve([]),
-    listUsersForServiceAssign(),
+    listUsersForServiceAssign(user),
   ]);
 
   return (

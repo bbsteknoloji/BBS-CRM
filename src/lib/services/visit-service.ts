@@ -406,13 +406,15 @@ export async function listVisitAuditLogs(user: SessionUser, visitId: string) {
 }
 
 export async function listCustomersForVisitSelect(user: SessionUser) {
-  const filter =
-    isSuperAdmin(user) || hasRole(user, "ADMIN")
+  const cf = !isSuperAdmin(user) && user.companyId ? { companyId: user.companyId } : {};
+  const filter: Prisma.CustomerWhereInput =
+    isSuperAdmin(user)
       ? { deletedAt: null }
-      : hasRole(user, "VIEWER")
-        ? { deletedAt: null }
+      : hasRole(user, "ADMIN") || hasRole(user, "VIEWER")
+        ? { deletedAt: null, ...cf }
         : {
             deletedAt: null,
+            ...cf,
             OR: [
               { assignedToId: user.id },
               { createdById: user.id },
@@ -451,9 +453,13 @@ export async function listServiceTicketsForVisitSelect(
   });
 }
 
-export async function listUsersForVisitAssign() {
+export async function listUsersForVisitAssign(user: SessionUser) {
+  const where: Prisma.UserWhereInput = { deletedAt: null, status: "ACTIVE" };
+  if (!isSuperAdmin(user) && user.companyId) {
+    where.companyId = user.companyId;
+  }
   return prisma.user.findMany({
-    where: { deletedAt: null, status: "ACTIVE" },
+    where,
     select: { id: true, firstName: true, lastName: true },
     orderBy: [{ firstName: "asc" }, { lastName: "asc" }],
     take: 200,

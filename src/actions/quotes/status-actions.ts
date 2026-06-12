@@ -16,6 +16,7 @@ import {
   startQuoteRevision,
   resendQuote,
   convertQuoteToContract,
+  getQuoteAccess,
 } from "@/lib/services/quote-service";
 import { actionError, actionSuccess, type ActionResult } from "@/lib/actions/types";
 
@@ -149,6 +150,10 @@ export async function generateQuotePdfAction(
   if (!hasAnyPermission(user, ["quote:write", "quote:approve"])) {
     return actionError("PDF oluşturma yetkisi yok");
   }
+  const parsed = quoteIdSchema.safeParse({ id: quoteId });
+  if (!parsed.success) return actionError("Geçersiz teklif");
+  const access = await getQuoteAccess(user, quoteId);
+  if (!access) return actionError("Teklif bulunamadı");
   const { generateQuotePdf } = await import(
     "@/lib/services/quote-pdf-service"
   );
@@ -171,6 +176,10 @@ export async function signQuoteAction(
   if (!hasAnyPermission(user, ["quote:write", "quote:approve"])) {
     return actionError("İmzalama yetkisi yok");
   }
+  const parsed = quoteIdSchema.safeParse({ id: quoteId });
+  if (!parsed.success) return actionError("Geçersiz teklif");
+  const access = await getQuoteAccess(user, quoteId);
+  if (!access) return actionError("Teklif bulunamadı");
   const { generateSignedQuotePdf } = await import(
     "@/lib/services/quote-pdf-service"
   );

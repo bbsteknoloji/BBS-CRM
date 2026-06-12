@@ -884,16 +884,20 @@ export async function listQuoteDocuments(
 export { listActiveProducts } from "@/lib/services/product-service";
 
 export async function listCustomersForQuoteSelect(user: SessionUser) {
-  const filter =
-    isSuperAdmin(user) || hasRole(user, "ADMIN")
+  const cf = !isSuperAdmin(user) && user.companyId ? { companyId: user.companyId } : {};
+  const filter: Prisma.CustomerWhereInput =
+    isSuperAdmin(user)
       ? { deletedAt: null }
-      : {
-          deletedAt: null,
-          OR: [
-            { assignedToId: user.id },
-            { createdById: user.id },
-          ],
-        };
+      : hasRole(user, "ADMIN")
+        ? { deletedAt: null, ...cf }
+        : {
+            deletedAt: null,
+            ...cf,
+            OR: [
+              { assignedToId: user.id },
+              { createdById: user.id },
+            ],
+          };
 
   return prisma.customer.findMany({
     where: filter,
@@ -905,7 +909,7 @@ export async function listCustomersForQuoteSelect(user: SessionUser) {
 
 export async function deleteQuote(user: SessionUser, quoteId: string) {
   const existing = await prisma.quote.findFirst({
-    where: { id: quoteId, deletedAt: null },
+    where: { id: quoteId, deletedAt: null, ...buildQuoteAccessFilter(user) },
     select: { id: true, number: true, status: true },
   });
   if (!existing) return null;

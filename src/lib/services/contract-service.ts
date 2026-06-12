@@ -988,16 +988,20 @@ export async function listContractAuditLogs(
 }
 
 export async function listCustomersForContractSelect(user: SessionUser) {
-  const filter =
-    isSuperAdmin(user) || hasRole(user, "ADMIN")
+  const cf = !isSuperAdmin(user) && user.companyId ? { companyId: user.companyId } : {};
+  const filter: Prisma.CustomerWhereInput =
+    isSuperAdmin(user)
       ? { deletedAt: null }
-      : {
-          deletedAt: null,
-          OR: [
-            { assignedToId: user.id },
-            { createdById: user.id },
-          ],
-        };
+      : hasRole(user, "ADMIN")
+        ? { deletedAt: null, ...cf }
+        : {
+            deletedAt: null,
+            ...cf,
+            OR: [
+              { assignedToId: user.id },
+              { createdById: user.id },
+            ],
+          };
 
   return prisma.customer.findMany({
     where: filter,
@@ -1081,7 +1085,7 @@ export async function uploadContractDocument(
 
 export async function deleteContract(user: SessionUser, contractId: string) {
   const existing = await prisma.contract.findFirst({
-    where: { id: contractId, deletedAt: null },
+    where: { id: contractId, deletedAt: null, ...buildContractAccessFilter(user) },
     select: { id: true, number: true, status: true },
   });
   if (!existing) return null;

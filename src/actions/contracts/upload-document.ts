@@ -18,6 +18,9 @@ export async function uploadContractDocumentAction(
   if (!(file instanceof File) || file.size === 0) {
     return actionError("Dosya seçin");
   }
+  if (file.size > 20 * 1024 * 1024) {
+    return actionError("Dosya boyutu en fazla 20 MB olabilir");
+  }
 
   const buffer = Buffer.from(await file.arrayBuffer());
   try {

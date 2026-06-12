@@ -56,7 +56,7 @@ export default async function ServiceTicketDetailPage({
     getServiceTicketDetail(user, id),
     listServiceTicketActivities(user, id),
     listServiceTicketAuditLogs(user, id),
-    listUsersForServiceAssign(),
+    listUsersForServiceAssign(user),
     canVisitRead ? listServiceTicketVisits(user, id) : Promise.resolve([]),
     canFileRead
       ? listEntityDocuments(user, "SERVICE_TICKET", id)

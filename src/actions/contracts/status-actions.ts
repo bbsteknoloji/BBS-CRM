@@ -164,10 +164,15 @@ export async function generateContractPdfAction(
 ): Promise<ActionResult<{ pdfVersionId: string; wordDocumentId: string }>> {
   const { requireAuth } = await import("@/lib/permissions/server");
   const { hasAnyPermission } = await import("@/lib/permissions/check");
+  const { getContractAccess } = await import("@/lib/services/contract-service");
   const user = await requireAuth();
   if (!hasAnyPermission(user, ["contract:write", "contract:renew"])) {
     return actionError("Belge oluşturma yetkisi yok");
   }
+  const parsed = contractIdSchema.safeParse({ id: contractId });
+  if (!parsed.success) return actionError("Geçersiz sözleşme");
+  const access = await getContractAccess(user, contractId);
+  if (!access) return actionError("Sözleşme bulunamadı");
   const { generateContractDocuments, generateContractPdf } = await import(
     "@/lib/services/contract-pdf-service"
   );
