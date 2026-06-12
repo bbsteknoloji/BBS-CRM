@@ -176,7 +176,7 @@ export async function convertContractDocxToPdf(
   docxBuffer: Buffer
 ): Promise<Buffer> {
   const tmpDir = await fs.mkdtemp(
-    path.join(process.platform === "win32" ? "C:\\temp" : os.tmpdir(), "bbs-contract-")
+    path.join(os.tmpdir(), "bbs-contract-")
   );
   const inputPath = path.join(tmpDir, "contract.docx");
   const outputPath = path.join(tmpDir, "contract.pdf");

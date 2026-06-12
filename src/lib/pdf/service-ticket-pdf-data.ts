@@ -2,7 +2,7 @@ import { prisma } from "@/lib/db";
 import type { ServiceTicketPdfData } from "@/lib/pdf/service-ticket-pdf-document";
 import { getCompanyProfile } from "@/lib/company-profile";
 import { format } from "@/lib/utils/date-format";
-import { loadQuoteLogoDataUri, loadQuoteAssetDataUri } from "@/lib/pdf/quote-brand";
+import { loadQuoteLogoDataUri } from "@/lib/pdf/quote-brand";
 import {
   SERVICE_TYPE_LABELS,
   SYSTEM_TYPE_LABELS,

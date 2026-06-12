@@ -205,6 +205,7 @@ export function ServiceTicketPdfDocument({ data }: { data: ServiceTicketPdfData 
         {/* ── Banner ── */}
         <View style={s.bannerRow}>
           {data.logoImagePath ? (
+            // eslint-disable-next-line jsx-a11y/alt-text -- @react-pdf/renderer Image
             <Image style={s.logo} src={data.logoImagePath} />
           ) : (
             <Text style={{ fontSize: 12, fontWeight: "bold", color: C.brandBlue }}>
@@ -343,6 +344,7 @@ export function ServiceTicketPdfDocument({ data }: { data: ServiceTicketPdfData 
         <View style={s.signatureRow}>
           <View style={s.signatureBox}>
             {data.stampImagePath && (
+              // eslint-disable-next-line jsx-a11y/alt-text -- @react-pdf/renderer Image
               <Image
                 src={data.stampImagePath}
                 style={{ width: 60, height: 40, objectFit: "contain", marginBottom: 4, alignSelf: "center" }}

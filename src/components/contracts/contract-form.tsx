@@ -87,7 +87,8 @@ export function ContractForm({
     if (endDate === addOneYear(prev) || endDate === "") {
       setEndDate(addOneYear(startDate));
     }
-  }, [startDate]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [startDate]); // endDate intentionally omitted — adding it causes infinite loop via setEndDate
 
   const filteredQuotes = customerId
     ? quotes.filter((q) => q.customerId === customerId)

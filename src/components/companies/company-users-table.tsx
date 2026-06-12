@@ -14,7 +14,6 @@ type User = {
 
 export function CompanyUsersTable({
   users,
-  companyId: _companyId,
 }: {
   users: User[];
   companyId: string;
