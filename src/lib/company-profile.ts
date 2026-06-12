@@ -10,7 +10,7 @@ function resolveLogoPath(logoUrl: string): string | null {
     : path.join(process.cwd(), "public", logoUrl);
   if (existsSync(local)) return local;
 
-  const pngFallback = path.join(process.cwd(), "public", "logo.png");
+  const pngFallback = path.join(process.cwd(), "public", "logo-pdf.png");
   if (existsSync(pngFallback)) return pngFallback;
 
   return null;

@@ -8,7 +8,7 @@ import {
  */
 export const company = {
   name: "BBS Teknoloji",
-  logo: "/logo.png",
+  logo: "/logo-pdf.png",
   email: "info@bbsteknoloji.com.tr",
   phone: "Tel: (442) 233 86 00",
   mobilePhone: "Cep: (507) 523 90 70",

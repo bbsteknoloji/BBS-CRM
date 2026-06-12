@@ -35,10 +35,10 @@ export const quoteBrand = {
     notesBody: 8.5,
   },
   assets: {
-    logo: "/logo.png",
+    logo: "/logo-pdf.png",
     accent: "/zarf.jpg",
   },
-  /** logo.png 1025×397 (orijinal şeffaf), zarf.jpg 141×573 — Excel hücre ölçüleri (pt) */
+  /** logo-pdf.png 1025×397 (PDF/baskı için), zarf.jpg 141×573 — Excel hücre ölçüleri (pt) */
   layout: {
     bannerHeight: 108,
     logoWidth: 243,
@@ -73,10 +73,11 @@ export function loadQuoteAssetDataUri(relativePath: string): string | null {
   return `data:${mime};base64,${buffer.toString("base64")}`;
 }
 
-/** Önce PNG (şeffaf), yoksa JPG yedek */
+/** PDF/baskı logosu: logo-pdf.png, yoksa logo.png, yoksa JPG yedek */
 export function loadQuoteLogoDataUri(): string | null {
   return (
     loadQuoteAssetDataUri(quoteBrand.assets.logo) ??
+    loadQuoteAssetDataUri("/logo.png") ??
     loadQuoteAssetDataUri("/logo.jpg")
   );
 }
