@@ -34,11 +34,12 @@ import {
 export function buildContractAccessFilter(
   user: SessionUser
 ): Prisma.ContractWhereInput {
-  if (isSuperAdmin(user) || hasRole(user, "ADMIN")) {
-    return {};
-  }
+  if (isSuperAdmin(user)) return {};
+  const cf = user.companyId ? { companyId: user.companyId } : {};
+  if (hasRole(user, "ADMIN")) return cf;
   if (hasRole(user, "SALES")) {
     return {
+      ...cf,
       OR: [
         { createdById: user.id },
         { ownerId: user.id },
@@ -570,12 +571,13 @@ export async function createContract(
   const { subtotal, taxTotal, total } = calculateTotals(
     mapLineItems(input.lineItems)
   );
-  const number = await nextDocumentNumber("CONTRACT");
+  const number = await nextDocumentNumber("CONTRACT", user.companyId);
   const ownerId = input.ownerId?.trim() || user.id;
 
   const contract = await prisma.$transaction(async (tx) => {
     const created = await tx.contract.create({
       data: {
+        companyId: user.companyId ?? undefined,
         number,
         customerId: input.customerId,
         quoteId: quoteId ?? null,

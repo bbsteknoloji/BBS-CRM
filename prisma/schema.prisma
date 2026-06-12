@@ -372,6 +372,7 @@ model Customer {
   healthComputedAt DateTime?             @map("health_computed_at") @db.Timestamptz(6)
 
   assignedToId String? @map("assigned_to_id") @db.Uuid
+  companyId    String? @map("company_id") @db.Uuid
 
   createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt   DateTime  @updatedAt @map("updated_at") @db.Timestamptz(6)
@@ -379,9 +380,10 @@ model Customer {
   createdById String?   @map("created_by_id") @db.Uuid
   updatedById String?   @map("updated_by_id") @db.Uuid
 
-  assignedTo User? @relation("CustomerAssignedTo", fields: [assignedToId], references: [id], onDelete: SetNull)
-  createdBy  User? @relation("CustomerCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
-  updatedBy  User? @relation("CustomerUpdatedBy", fields: [updatedById], references: [id], onDelete: SetNull)
+  assignedTo User?    @relation("CustomerAssignedTo", fields: [assignedToId], references: [id], onDelete: SetNull)
+  createdBy  User?    @relation("CustomerCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+  updatedBy  User?    @relation("CustomerUpdatedBy", fields: [updatedById], references: [id], onDelete: SetNull)
+  company    Company? @relation("CompanyCustomers", fields: [companyId], references: [id], onDelete: SetNull)
 
   contacts   CustomerContact[]
   devices    CustomerDevice[]
@@ -397,6 +399,7 @@ model Customer {
   @@index([healthStatus])
   @@index([status])
   @@index([assignedToId])
+  @@index([companyId])
   @@index([legalName])
   @@index([tradeName])
   @@index([deletedAt])
@@ -554,6 +557,7 @@ model Task {
   quoteId      String? @map("quote_id") @db.Uuid
   contractId   String? @map("contract_id") @db.Uuid
   assignedToId String  @map("assigned_to_id") @db.Uuid
+  companyId    String? @map("company_id") @db.Uuid
 
   createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt   DateTime  @updatedAt @map("updated_at") @db.Timestamptz(6)
@@ -566,11 +570,13 @@ model Task {
   contract   Contract? @relation(fields: [contractId], references: [id], onDelete: SetNull)
   assignedTo User      @relation("TaskAssignedTo", fields: [assignedToId], references: [id], onDelete: Restrict)
   createdBy  User?     @relation("TaskCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+  company    Company?  @relation("CompanyTasks", fields: [companyId], references: [id], onDelete: SetNull)
 
   activities Activity[]
 
   @@index([assignedToId, status])
   @@index([customerId])
+  @@index([companyId])
   @@index([dueAt])
   @@index([status])
   @@index([deletedAt])
@@ -636,6 +642,7 @@ model Quote {
   terms    String? @db.Text
 
   convertedContractId String? @unique @map("converted_contract_id") @db.Uuid
+  companyId           String? @map("company_id") @db.Uuid
 
   createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt   DateTime  @updatedAt @map("updated_at") @db.Timestamptz(6)
@@ -648,6 +655,7 @@ model Quote {
   sourceContracts   Contract[] @relation("ContractSourceQuote")
   createdBy         User?      @relation("QuoteCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
   updatedBy         User?      @relation("QuoteUpdatedBy", fields: [updatedById], references: [id], onDelete: SetNull)
+  company           Company?   @relation("CompanyQuotes", fields: [companyId], references: [id], onDelete: SetNull)
 
   lineItems   QuoteLineItem[]
   revisions   QuoteRevision[]
@@ -657,6 +665,7 @@ model Quote {
 
   @@index([customerId, status])
   @@index([status])
+  @@index([companyId])
   @@index([validUntil])
   @@index([deletedAt])
   @@index([createdAt(sort: Desc)])
@@ -758,6 +767,7 @@ model Contract {
 
   ownerId          String  @map("owner_id") @db.Uuid
   parentContractId String? @map("parent_contract_id") @db.Uuid
+  companyId        String? @map("company_id") @db.Uuid
 
   createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt   DateTime  @updatedAt @map("updated_at") @db.Timestamptz(6)
@@ -773,6 +783,7 @@ model Contract {
   childContracts Contract[] @relation("ContractRenewalChain")
   createdBy      User?      @relation("ContractCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
   updatedBy      User?      @relation("ContractUpdatedBy", fields: [updatedById], references: [id], onDelete: SetNull)
+  company        Company?   @relation("CompanyContracts", fields: [companyId], references: [id], onDelete: SetNull)
 
   lineItems   ContractLineItem[]
   contractDevices ContractDevice[]
@@ -788,6 +799,7 @@ model Contract {
   @@index([endDate])
   @@index([ownerId])
   @@index([quoteId])
+  @@index([companyId])
   @@index([parentContractId])
   @@index([deletedAt])
   @@index([createdAt(sort: Desc)])
@@ -831,6 +843,8 @@ model ServiceTicket {
   openedAt DateTime  @default(now()) @map("opened_at") @db.Timestamptz(6)
   closedAt DateTime? @map("closed_at") @db.Timestamptz(6)
 
+  companyId String? @map("company_id") @db.Uuid
+
   createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt   DateTime  @updatedAt @map("updated_at") @db.Timestamptz(6)
   deletedAt   DateTime? @map("deleted_at") @db.Timestamptz(6)
@@ -842,6 +856,7 @@ model ServiceTicket {
   assignedUser User?     @relation("ServiceTicketAssignedTo", fields: [assignedUserId], references: [id], onDelete: SetNull)
   createdBy    User?     @relation("ServiceTicketCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
   updatedBy    User?     @relation("ServiceTicketUpdatedBy", fields: [updatedById], references: [id], onDelete: SetNull)
+  company      Company?  @relation("CompanyServiceTickets", fields: [companyId], references: [id], onDelete: SetNull)
 
   lineItems    ServiceTicketLineItem[]
   pdfVersions  ServiceTicketPdfVersion[]
@@ -852,6 +867,7 @@ model ServiceTicket {
   @@index([assignedUserId, status])
   @@index([status, openedAt(sort: Desc)])
   @@index([contractId])
+  @@index([companyId])
   @@index([serviceType])
   @@index([deletedAt])
   @@index([createdAt(sort: Desc)])
@@ -903,6 +919,7 @@ model VisitRecord {
   description   String    @db.Text
   result        String?   @db.Text
   nextVisitDate DateTime? @map("next_visit_date") @db.Date
+  companyId     String?   @map("company_id") @db.Uuid
 
   createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt   DateTime  @updatedAt @map("updated_at") @db.Timestamptz(6)
@@ -916,6 +933,7 @@ model VisitRecord {
   user          User           @relation("VisitRecordUser", fields: [userId], references: [id], onDelete: Restrict)
   createdBy User?     @relation("VisitRecordCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
   updatedBy User?     @relation("VisitRecordUpdatedBy", fields: [updatedById], references: [id], onDelete: SetNull)
+  company   Company?  @relation("CompanyVisitRecords", fields: [companyId], references: [id], onDelete: SetNull)
 
   activities Activity[]
 
@@ -923,6 +941,7 @@ model VisitRecord {
   @@index([userId, visitDate(sort: Desc)])
   @@index([nextVisitDate])
   @@index([contractId])
+  @@index([companyId])
   @@index([serviceTicketId])
   @@index([deletedAt])
   @@index([createdAt(sort: Desc)])
@@ -1104,14 +1123,16 @@ model NumberSequence {
   year      Int
   prefix    String             @db.VarChar(10)
   lastValue Int                @default(0) @map("last_value")
+  companyId String?            @map("company_id") @db.Uuid
 
   updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
 
-  @@unique([type, year])
+  company Company? @relation("CompanyNumberSequences", fields: [companyId], references: [id], onDelete: SetNull)
+
+  @@unique([companyId, type, year])
   @@map("number_sequences")
 }
 
-// Single-tenant issuer profile (PDF header, documents, settings UI)
 model Company {
   id        String   @id @default(uuid()) @db.Uuid
   name      String   @db.VarChar(255)
@@ -1123,7 +1144,14 @@ model Company {
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
 
-  users User[]
+  users          User[]
+  customers      Customer[]      @relation("CompanyCustomers")
+  contracts      Contract[]      @relation("CompanyContracts")
+  quotes         Quote[]         @relation("CompanyQuotes")
+  serviceTickets ServiceTicket[] @relation("CompanyServiceTickets")
+  tasks          Task[]          @relation("CompanyTasks")
+  visitRecords   VisitRecord[]   @relation("CompanyVisitRecords")
+  numberSeqs     NumberSequence[] @relation("CompanyNumberSequences")
 
   @@map("companies")
 }

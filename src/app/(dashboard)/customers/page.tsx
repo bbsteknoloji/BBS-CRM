@@ -63,7 +63,7 @@ async function CustomerListContent({
   const [list, cities, users] = await Promise.all([
     listCustomers(user, query),
     getDistinctCities(user),
-    getAssignableUsers(),
+    getAssignableUsers(user),
   ]);
 
   const userOptions = users.map((u) => ({

@@ -49,13 +49,13 @@ export function LoginForm() {
 
   return (
     <Card className="w-full border-0 bg-transparent shadow-none">
-      <CardHeader className="space-y-1">
+      <CardHeader className="space-y-1 pb-4 pt-6 sm:px-8">
         <CardTitle className="text-2xl font-semibold">Giriş yap</CardTitle>
         <CardDescription>
           Kurumsal hesabınızla devam edin
         </CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="pb-8 sm:px-8">
         <form onSubmit={onSubmit} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="email">E-posta</Label>

@@ -19,8 +19,16 @@ export function PremiumSidebar({
         className
       )}
     >
-      <div className="flex h-16 items-center border-b border-sidebar-border px-6">
-        <BbsLogo variant="dark" showTagline className="text-sidebar-foreground" />
+      <div
+        className="flex flex-col items-center border-b border-sidebar-border px-4"
+        style={{ paddingTop: "4px", paddingBottom: "8px" }}
+      >
+        <BbsLogo
+          variant="dark"
+          showTagline
+          size="md"
+          className="text-sidebar-foreground"
+        />
       </div>
       <div className="flex-1 overflow-y-auto">{children}</div>
       {footer ? (

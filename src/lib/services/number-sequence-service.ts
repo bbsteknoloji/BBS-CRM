@@ -9,15 +9,18 @@ const PREFIX: Record<NumberSequenceType, string> = {
 };
 
 export async function nextDocumentNumber(
-  type: NumberSequenceType
+  type: NumberSequenceType,
+  companyId: string | null
 ): Promise<string> {
   const year = new Date().getFullYear();
   const prefix = PREFIX[type];
 
+  if (!companyId) throw new Error("companyId required for document numbering");
+
   const seq = await prisma.$transaction(async (tx) => {
     const row = await tx.numberSequence.upsert({
-      where: { type_year: { type, year } },
-      create: { type, year, prefix, lastValue: 0 },
+      where: { companyId_type_year: { companyId, type, year } },
+      create: { companyId, type, year, prefix, lastValue: 0 },
       update: {},
     });
 

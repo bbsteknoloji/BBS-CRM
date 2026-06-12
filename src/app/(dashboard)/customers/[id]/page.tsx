@@ -82,7 +82,7 @@ export default async function CustomerDetailPage({
     listCustomerTasks(user, id),
     listCustomerQuotes(user, id),
     listCustomerContracts(user, id),
-    getAssignableUsers(),
+    getAssignableUsers(user),
     canServiceRead ? listCustomerServiceTickets(user, id) : Promise.resolve([]),
     canVisitRead ? listCustomerVisits(user, id) : Promise.resolve([]),
     canFileRead ? listCustomerFileCenterItems(user, id) : Promise.resolve([]),

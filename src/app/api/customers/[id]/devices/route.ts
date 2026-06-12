@@ -16,6 +16,7 @@ export async function GET(_request: Request, { params }: Params) {
     id: userId,
     email: session.user?.email ?? "",
     name: session.user?.name ?? "",
+    companyId: session.user?.companyId ?? null,
     roles: session.user?.roles ?? [],
     permissions: session.user?.permissions ?? [],
   };

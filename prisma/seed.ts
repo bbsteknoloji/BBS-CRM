@@ -329,45 +329,29 @@ async function seedSuperAdmin(companyId: string | null) {
 
 async function seedNumberSequences() {
   const year = new Date().getFullYear();
+  const company = await prisma.company.findFirst({ select: { id: true } });
+  if (!company) throw new Error("seedNumberSequences: şirket bulunamadı");
+  const cid = company.id;
+
   await prisma.numberSequence.upsert({
-    where: { type_year: { type: NumberSequenceType.QUOTE, year } },
+    where: { companyId_type_year: { companyId: cid, type: NumberSequenceType.QUOTE, year } },
     update: {},
-    create: {
-      type: NumberSequenceType.QUOTE,
-      year,
-      prefix: "TEK",
-      lastValue: 0,
-    },
+    create: { companyId: cid, type: NumberSequenceType.QUOTE, year, prefix: "TEK", lastValue: 0 },
   });
   await prisma.numberSequence.upsert({
-    where: { type_year: { type: NumberSequenceType.CONTRACT, year } },
+    where: { companyId_type_year: { companyId: cid, type: NumberSequenceType.CONTRACT, year } },
     update: {},
-    create: {
-      type: NumberSequenceType.CONTRACT,
-      year,
-      prefix: "SOZ",
-      lastValue: 0,
-    },
+    create: { companyId: cid, type: NumberSequenceType.CONTRACT, year, prefix: "SOZ", lastValue: 0 },
   });
   await prisma.numberSequence.upsert({
-    where: { type_year: { type: NumberSequenceType.SERVICE, year } },
+    where: { companyId_type_year: { companyId: cid, type: NumberSequenceType.SERVICE, year } },
     update: {},
-    create: {
-      type: NumberSequenceType.SERVICE,
-      year,
-      prefix: "SRV",
-      lastValue: 0,
-    },
+    create: { companyId: cid, type: NumberSequenceType.SERVICE, year, prefix: "SRV", lastValue: 0 },
   });
   await prisma.numberSequence.upsert({
-    where: { type_year: { type: NumberSequenceType.VISIT, year } },
+    where: { companyId_type_year: { companyId: cid, type: NumberSequenceType.VISIT, year } },
     update: {},
-    create: {
-      type: NumberSequenceType.VISIT,
-      year,
-      prefix: "VIS",
-      lastValue: 0,
-    },
+    create: { companyId: cid, type: NumberSequenceType.VISIT, year, prefix: "VIS", lastValue: 0 },
   });
 }
 
@@ -728,18 +712,14 @@ async function seedDemoQuotes(adminId: string) {
     },
   });
 
-  await prisma.numberSequence.upsert({
-    where: {
-      type_year: { type: NumberSequenceType.QUOTE, year: new Date().getFullYear() },
-    },
-    update: { lastValue: 1 },
-    create: {
-      type: NumberSequenceType.QUOTE,
-      year: new Date().getFullYear(),
-      prefix: "TEK",
-      lastValue: 1,
-    },
-  });
+  const _qCompany = await prisma.company.findFirst({ select: { id: true } });
+  if (_qCompany) {
+    await prisma.numberSequence.upsert({
+      where: { companyId_type_year: { companyId: _qCompany.id, type: NumberSequenceType.QUOTE, year: new Date().getFullYear() } },
+      update: { lastValue: 1 },
+      create: { companyId: _qCompany.id, type: NumberSequenceType.QUOTE, year: new Date().getFullYear(), prefix: "TEK", lastValue: 1 },
+    });
+  }
 
   await prisma.activity.create({
     data: {
@@ -846,21 +826,14 @@ async function seedDemoContracts(adminId: string) {
     },
   });
 
-  await prisma.numberSequence.upsert({
-    where: {
-      type_year: {
-        type: NumberSequenceType.CONTRACT,
-        year: new Date().getFullYear(),
-      },
-    },
-    update: { lastValue: 2 },
-    create: {
-      type: NumberSequenceType.CONTRACT,
-      year: new Date().getFullYear(),
-      prefix: "SOZ",
-      lastValue: 2,
-    },
-  });
+  const _cCompany = await prisma.company.findFirst({ select: { id: true } });
+  if (_cCompany) {
+    await prisma.numberSequence.upsert({
+      where: { companyId_type_year: { companyId: _cCompany.id, type: NumberSequenceType.CONTRACT, year: new Date().getFullYear() } },
+      update: { lastValue: 2 },
+      create: { companyId: _cCompany.id, type: NumberSequenceType.CONTRACT, year: new Date().getFullYear(), prefix: "SOZ", lastValue: 2 },
+    });
+  }
 
   await prisma.activity.create({
     data: {
@@ -926,21 +899,14 @@ async function seedDemoServiceTickets(adminId: string) {
     },
   });
 
-  await prisma.numberSequence.upsert({
-    where: {
-      type_year: {
-        type: NumberSequenceType.SERVICE,
-        year: new Date().getFullYear(),
-      },
-    },
-    update: { lastValue: 1 },
-    create: {
-      type: NumberSequenceType.SERVICE,
-      year: new Date().getFullYear(),
-      prefix: "SRV",
-      lastValue: 1,
-    },
-  });
+  const _sCompany = await prisma.company.findFirst({ select: { id: true } });
+  if (_sCompany) {
+    await prisma.numberSequence.upsert({
+      where: { companyId_type_year: { companyId: _sCompany.id, type: NumberSequenceType.SERVICE, year: new Date().getFullYear() } },
+      update: { lastValue: 1 },
+      create: { companyId: _sCompany.id, type: NumberSequenceType.SERVICE, year: new Date().getFullYear(), prefix: "SRV", lastValue: 1 },
+    });
+  }
 
   await prisma.activity.create({
     data: {
@@ -1002,21 +968,14 @@ async function seedDemoVisits(adminId: string) {
     },
   });
 
-  await prisma.numberSequence.upsert({
-    where: {
-      type_year: {
-        type: NumberSequenceType.VISIT,
-        year: new Date().getFullYear(),
-      },
-    },
-    update: { lastValue: 1 },
-    create: {
-      type: NumberSequenceType.VISIT,
-      year: new Date().getFullYear(),
-      prefix: "VIS",
-      lastValue: 1,
-    },
-  });
+  const _vCompany = await prisma.company.findFirst({ select: { id: true } });
+  if (_vCompany) {
+    await prisma.numberSequence.upsert({
+      where: { companyId_type_year: { companyId: _vCompany.id, type: NumberSequenceType.VISIT, year: new Date().getFullYear() } },
+      update: { lastValue: 1 },
+      create: { companyId: _vCompany.id, type: NumberSequenceType.VISIT, year: new Date().getFullYear(), prefix: "VIS", lastValue: 1 },
+    });
+  }
 
   await prisma.activity.create({
     data: {

@@ -22,11 +22,12 @@ import { getCustomerForAccess } from "./customer-service";
 export function buildQuoteAccessFilter(
   user: SessionUser
 ): Prisma.QuoteWhereInput {
-  if (isSuperAdmin(user) || hasRole(user, "ADMIN")) {
-    return {};
-  }
+  if (isSuperAdmin(user)) return {};
+  const cf = user.companyId ? { companyId: user.companyId } : {};
+  if (hasRole(user, "ADMIN")) return cf;
   if (hasRole(user, "SALES")) {
     return {
+      ...cf,
       OR: [
         { createdById: user.id },
         {
@@ -363,11 +364,12 @@ export async function createQuote(
   const { subtotal, taxTotal, total } = calculateTotals(
     mapLineItems(input.lineItems)
   );
-  const number = await nextDocumentNumber("QUOTE");
+  const number = await nextDocumentNumber("QUOTE", user.companyId);
 
   const quote = await prisma.$transaction(async (tx) => {
     const created = await tx.quote.create({
       data: {
+        companyId: user.companyId ?? undefined,
         number,
         customerId: input.customerId,
         title: input.title.trim(),
@@ -687,7 +689,7 @@ export async function convertQuoteToContract(
 
   assertTransition(quote.status, "CONVERTED");
 
-  const contractNumber = await nextDocumentNumber("CONTRACT");
+  const contractNumber = await nextDocumentNumber("CONTRACT", user.companyId);
   const ownerId = options.ownerId ?? user.id;
   const startDate = new Date(options.startDate);
   const endDate = options.endDate ? new Date(options.endDate) : null;
@@ -695,6 +697,7 @@ export async function convertQuoteToContract(
   const result = await prisma.$transaction(async (tx) => {
     const contract = await tx.contract.create({
       data: {
+        companyId: user.companyId ?? undefined,
         number: contractNumber,
         customerId: quote.customerId,
         quoteId: quote.id,

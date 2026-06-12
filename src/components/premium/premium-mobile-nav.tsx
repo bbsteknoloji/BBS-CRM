@@ -46,8 +46,16 @@ export function PremiumMobileNav({
         side="left"
         className="w-[280px] border-sidebar-border bg-sidebar p-0 text-sidebar-foreground sm:max-w-[280px]"
       >
-        <div className="flex h-16 items-center border-b border-sidebar-border px-6">
-          <BbsLogo variant="dark" showTagline className="text-sidebar-foreground" />
+        <div
+          className="flex flex-col items-center border-b border-sidebar-border px-4"
+          style={{ paddingTop: "20px", paddingBottom: "16px" }}
+        >
+          <BbsLogo
+            variant="dark"
+            showTagline
+            size="md"
+            className="text-sidebar-foreground"
+          />
         </div>
         <nav className="flex flex-1 flex-col gap-1 overflow-y-auto px-3 py-4">
           {navItems.map((item) => {

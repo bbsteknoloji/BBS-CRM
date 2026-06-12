@@ -55,7 +55,11 @@ function canAccessCustomer(
   if (hasRole(user, "VIEWER")) {
     return prisma.customer
       .findFirst({
-        where: { id: customerId, deletedAt: null },
+        where: {
+          id: customerId,
+          deletedAt: null,
+          ...(user.companyId ? { companyId: user.companyId } : {}),
+        },
         select: { id: true },
       })
       .then(Boolean);

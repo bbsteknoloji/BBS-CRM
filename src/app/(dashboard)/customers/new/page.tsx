@@ -9,8 +9,8 @@ import { getAssignableUsers } from "@/lib/services/customer-service";
 export const metadata = { title: "Yeni müşteri" };
 
 export default async function NewCustomerPage() {
-  await requirePermission("customer:write");
-  const users = await getAssignableUsers();
+  const user = await requirePermission("customer:write");
+  const users = await getAssignableUsers(user);
   const userOptions = users.map((u) => ({
     id: u.id,
     name: `${u.firstName} ${u.lastName}`.trim(),

@@ -25,8 +25,11 @@ const LIST_SELECT = {
 export function buildTaskAccessFilter(
   user: SessionUser
 ): Prisma.TaskWhereInput {
-  if (isSuperAdmin(user) || hasRole(user, "ADMIN")) return {};
+  if (isSuperAdmin(user)) return {};
+  const cf = user.companyId ? { companyId: user.companyId } : {};
+  if (hasRole(user, "ADMIN")) return cf;
   return {
+    ...cf,
     OR: [{ assignedToId: user.id }, { createdById: user.id }],
   };
 }
@@ -178,6 +181,7 @@ function completedAtForStatus(status: TaskFormInput["status"]) {
 export async function createTask(user: SessionUser, input: TaskFormInput) {
   const created = await prisma.task.create({
     data: {
+      companyId: user.companyId ?? undefined,
       title: input.title.trim(),
       description: input.description?.trim() || null,
       status: input.status,

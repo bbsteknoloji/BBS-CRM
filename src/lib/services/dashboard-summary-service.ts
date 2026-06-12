@@ -19,9 +19,12 @@ import {
 function buildCustomerAccessFilter(
   user: SessionUser
 ): Prisma.CustomerWhereInput {
-  if (isSuperAdmin(user) || hasRole(user, "ADMIN")) return {};
+  if (isSuperAdmin(user)) return {};
+  const cf = user.companyId ? { companyId: user.companyId } : {};
+  if (hasRole(user, "ADMIN")) return cf;
   if (hasRole(user, "SALES")) {
     return {
+      ...cf,
       OR: [
         { assignedToId: user.id },
         { createdById: user.id },
@@ -34,9 +37,12 @@ function buildCustomerAccessFilter(
 function buildServiceAccessFilter(
   user: SessionUser
 ): Prisma.ServiceTicketWhereInput {
-  if (isSuperAdmin(user) || hasRole(user, "ADMIN")) return {};
+  if (isSuperAdmin(user)) return {};
+  const cf = user.companyId ? { companyId: user.companyId } : {};
+  if (hasRole(user, "ADMIN")) return cf;
   if (hasRole(user, "SALES") || hasRole(user, "TECHNICIAN") || hasRole(user, "FIELD_OPS")) {
     return {
+      ...cf,
       OR: [
         { assignedUserId: user.id },
         { createdById: user.id },
@@ -55,9 +61,12 @@ function buildServiceAccessFilter(
 }
 
 function buildQuoteAccessFilter(user: SessionUser): Prisma.QuoteWhereInput {
-  if (isSuperAdmin(user) || hasRole(user, "ADMIN")) return {};
+  if (isSuperAdmin(user)) return {};
+  const cf = user.companyId ? { companyId: user.companyId } : {};
+  if (hasRole(user, "ADMIN")) return cf;
   if (hasRole(user, "SALES")) {
     return {
+      ...cf,
       OR: [
         { createdById: user.id },
         {

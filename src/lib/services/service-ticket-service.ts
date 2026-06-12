@@ -47,13 +47,16 @@ async function upsertServiceTicketLineItems(
 export function buildServiceTicketAccessFilter(
   user: SessionUser
 ): Prisma.ServiceTicketWhereInput {
-  if (isSuperAdmin(user) || hasRole(user, "ADMIN")) return {};
+  if (isSuperAdmin(user)) return {};
+  const cf = user.companyId ? { companyId: user.companyId } : {};
+  if (hasRole(user, "ADMIN")) return cf;
   if (
     hasRole(user, "SALES") ||
     hasRole(user, "TECHNICIAN") ||
     hasRole(user, "FIELD_OPS")
   ) {
     return {
+      ...cf,
       OR: [
         { assignedUserId: user.id },
         { createdById: user.id },
@@ -333,13 +336,14 @@ export async function createServiceTicket(
     if (!c) throw new Error("Sözleşme bu müşteriye ait değil");
   }
 
-  const ticketNo = await nextDocumentNumber("SERVICE");
+  const ticketNo = await nextDocumentNumber("SERVICE", user.companyId);
   const assignedUserId = input.assignedUserId?.trim() || null;
   const { subtotal, taxTotal, total } = calculateTotals(input.lineItems ?? []);
 
   const ticket = await prisma.$transaction(async (tx) => {
     const created = await tx.serviceTicket.create({
       data: {
+        companyId: user.companyId ?? undefined,
         ticketNo,
         customerId: input.customerId,
         contractId,

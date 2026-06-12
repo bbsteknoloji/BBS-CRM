@@ -10,6 +10,7 @@ export async function getSessionUser(): Promise<SessionUser | null> {
     id: session.user.id,
     email: session.user.email ?? "",
     name: session.user.name ?? "",
+    companyId: session.user.companyId ?? null,
     roles: session.user.roles ?? [],
     permissions: session.user.permissions ?? [],
   };

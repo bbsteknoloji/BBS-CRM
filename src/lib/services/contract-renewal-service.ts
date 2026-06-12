@@ -48,7 +48,7 @@ export async function renewContract(
 
   assertTransition(source.status, "RENEWED");
 
-  const newNumber = await nextDocumentNumber("CONTRACT");
+  const newNumber = await nextDocumentNumber("CONTRACT", user.companyId);
   const newStartDate = new Date(input.newStartDate);
   const newEndDate = input.newEndDate
     ? new Date(input.newEndDate)
@@ -64,6 +64,7 @@ export async function renewContract(
   const result = await prisma.$transaction(async (tx) => {
     const newContract = await tx.contract.create({
       data: {
+        companyId: source.companyId ?? undefined,
         number: newNumber,
         customerId: source.customerId,
         quoteId: source.quoteId,

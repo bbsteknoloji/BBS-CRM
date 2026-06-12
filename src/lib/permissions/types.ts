@@ -57,6 +57,7 @@ export type SessionUser = {
   id: string;
   email: string;
   name: string;
+  companyId: string | null;
   roles: RoleCode[];
   permissions: Permission[];
 };

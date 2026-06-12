@@ -53,6 +53,7 @@ export async function loadUserByEmail(
     id: user.id,
     email: user.email,
     name: `${user.firstName} ${user.lastName}`.trim(),
+    companyId: user.companyId ?? null,
     roles,
     permissions: filterKnownPermissions([...permissionSet]),
   };

@@ -13,13 +13,16 @@ import { refreshCustomerHealthCache } from "./customer-health-service";
 export function buildVisitAccessFilter(
   user: SessionUser
 ): Prisma.VisitRecordWhereInput {
-  if (isSuperAdmin(user) || hasRole(user, "ADMIN")) return {};
+  if (isSuperAdmin(user)) return {};
+  const cf = user.companyId ? { companyId: user.companyId } : {};
+  if (hasRole(user, "ADMIN")) return cf;
   if (
     hasRole(user, "SALES") ||
     hasRole(user, "TECHNICIAN") ||
     hasRole(user, "FIELD_OPS")
   ) {
     return {
+      ...cf,
       OR: [
         { userId: user.id },
         { createdById: user.id },
@@ -255,10 +258,11 @@ export async function createVisit(user: SessionUser, input: VisitFormInput) {
   const serviceTicketId = input.serviceTicketId?.trim() || null;
   await validateVisitLinks(input.customerId, contractId, serviceTicketId);
 
-  const visitNo = await nextDocumentNumber("VISIT");
+  const visitNo = await nextDocumentNumber("VISIT", user.companyId);
 
   const visit = await prisma.visitRecord.create({
     data: {
+      companyId: user.companyId ?? undefined,
       visitNo,
       customerId: input.customerId,
       contractId,

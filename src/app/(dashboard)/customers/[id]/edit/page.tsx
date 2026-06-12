@@ -35,7 +35,7 @@ export default async function EditCustomerPage({
 
   const [customer, users] = await Promise.all([
     getCustomerDetail(user, id),
-    getAssignableUsers(),
+    getAssignableUsers(user),
   ]);
 
   if (!customer) notFound();

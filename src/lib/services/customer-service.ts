@@ -56,18 +56,13 @@ function sortCustomerListItems<
 }
 
 function buildAccessFilter(user: SessionUser): Prisma.CustomerWhereInput {
-  if (
-    isSuperAdmin(user) ||
-    hasRole(user, "ADMIN")
-  ) {
-    return {};
-  }
+  if (isSuperAdmin(user)) return {};
+  const cf = user.companyId ? { companyId: user.companyId } : {};
+  if (hasRole(user, "ADMIN")) return cf;
   if (hasRole(user, "SALES")) {
     return {
-      OR: [
-        { assignedToId: user.id },
-        { createdById: user.id },
-      ],
+      ...cf,
+      OR: [{ assignedToId: user.id }, { createdById: user.id }],
     };
   }
   return { id: "00000000-0000-0000-0000-000000000000" };
@@ -213,9 +208,13 @@ export async function getDistinctCities(user: SessionUser) {
   return rows.map((r) => r.city);
 }
 
-export async function getAssignableUsers() {
+export async function getAssignableUsers(user: SessionUser) {
+  const where: Prisma.UserWhereInput = { deletedAt: null, status: "ACTIVE" };
+  if (!isSuperAdmin(user) && user.companyId) {
+    where.companyId = user.companyId;
+  }
   return prisma.user.findMany({
-    where: { deletedAt: null, status: "ACTIVE" },
+    where,
     select: {
       id: true,
       firstName: true,
@@ -335,6 +334,7 @@ export async function createCustomer(
   const customer = await prisma.$transaction(async (tx) => {
     const created = await tx.customer.create({
       data: {
+        companyId: user.companyId ?? undefined,
         legalName: input.legalName.trim(),
         tradeName: input.tradeName?.trim() || null,
         taxNumber: input.taxNumber.trim(),
@@ -608,6 +608,7 @@ export async function createCustomerTask(
 
   const task = await prisma.task.create({
     data: {
+      companyId: user.companyId ?? undefined,
       customerId: input.customerId,
       title: input.title.trim(),
       description: input.description?.trim() || null,

@@ -20,6 +20,7 @@ export const authConfig = {
         token.sub = user.id;
         token.roles = user.roles;
         token.permissions = user.permissions;
+        token.companyId = user.companyId ?? null;
       }
       return token;
     },
@@ -30,6 +31,8 @@ export const authConfig = {
           (token.roles as typeof session.user.roles) ?? [];
         session.user.permissions =
           (token.permissions as typeof session.user.permissions) ?? [];
+        session.user.companyId =
+          (token.companyId as string | null) ?? null;
       }
       return session;
     },
