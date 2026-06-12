@@ -13,7 +13,8 @@ export type NavIconKey =
   | "FolderOpen"
   | "BarChart3"
   | "Bell"
-  | "Settings";
+  | "Settings"
+  | "Building2";
 
 export type NavItem = {
   title: string;
@@ -95,6 +96,12 @@ export const mainNavigation: NavItem[] = [
     href: "/settings",
     icon: "Settings",
     permissions: ["settings:manage", "settings:read"],
+  },
+  {
+    title: "Firmalar",
+    href: "/companies",
+    icon: "Building2",
+    permissions: ["company:manage"],
   },
 ];
 

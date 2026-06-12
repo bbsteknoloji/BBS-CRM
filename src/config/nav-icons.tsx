@@ -14,6 +14,7 @@ import {
   BarChart3,
   Bell,
   Settings,
+  Building2,
 } from "lucide-react";
 import type { NavIconKey } from "@/config/navigation";
 
@@ -30,6 +31,7 @@ const NAV_ICONS: Record<NavIconKey, LucideIcon> = {
   BarChart3,
   Bell,
   Settings,
+  Building2,
 };
 
 export function resolveNavIcon(key: NavIconKey): LucideIcon {
