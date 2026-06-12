@@ -36,6 +36,7 @@ export default async function VisitDetailPage({ params, searchParams }: Props) {
   const canWrite = hasPermission(user, "visit:write");
   const canFileRead = hasPermission(user, "file:read");
   const canFileDownload = hasPermission(user, "file:download");
+  const canFileDelete = hasPermission(user, "file:delete");
   const canDocumentUpload = hasPermission(user, "document:upload");
   const { id } = await params;
   const { tab } = await searchParams;
@@ -77,6 +78,7 @@ export default async function VisitDetailPage({ params, searchParams }: Props) {
             files={files}
             canFileRead={canFileRead}
             canFileDownload={canFileDownload}
+            canFileDelete={canFileDelete}
             canDocumentUpload={canDocumentUpload}
           />
         </PremiumPageContainer>

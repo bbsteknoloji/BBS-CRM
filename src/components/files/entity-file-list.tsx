@@ -1,7 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo } from "react";
+import { useMemo, useTransition } from "react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import { type ColumnDef } from "@tanstack/react-table";
 import type { FileCenterItem } from "@/lib/services/file-center-types";
 import { formatFileSize } from "@/lib/utils/file-format";
@@ -9,10 +11,12 @@ import { format } from "@/lib/utils/date-format";
 import { PremiumDataTable } from "@/components/premium/premium-data-table";
 import { FileModuleBadge } from "./file-module-badge";
 import { FileTypeBadge } from "./file-type-badge";
+import { deleteFileAction } from "@/actions/files/delete-file";
 
 type Props = {
   items: FileCenterItem[];
   canDownload: boolean;
+  canDelete?: boolean;
   emptyMessage?: string;
 };
 
@@ -20,8 +24,25 @@ type Props = {
 export function EntityFileList({
   items,
   canDownload,
+  canDelete = false,
   emptyMessage = "Dosya yok.",
 }: Props) {
+  const router = useRouter();
+  const [pending, startTransition] = useTransition();
+
+  function handleDelete(id: string) {
+    if (!confirm("Bu dosya silinsin mi?")) return;
+    startTransition(async () => {
+      const res = await deleteFileAction(id);
+      if (res.success) {
+        toast.success("Dosya silindi");
+        router.refresh();
+      } else {
+        toast.error(res.error ?? "Silinemedi");
+      }
+    });
+  }
+
   const columns = useMemo<ColumnDef<FileCenterItem>[]>(
     () => [
       {
@@ -78,11 +99,21 @@ export function EntityFileList({
             >
               Kayıt
             </Link>
+            {canDelete && row.original.canDelete ? (
+              <button
+                type="button"
+                disabled={pending}
+                onClick={() => handleDelete(row.original.id)}
+                className="text-destructive hover:underline disabled:opacity-50"
+              >
+                Sil
+              </button>
+            ) : null}
           </div>
         ),
       },
     ],
-    [canDownload]
+    [canDownload, canDelete, pending]
   );
 
   return (

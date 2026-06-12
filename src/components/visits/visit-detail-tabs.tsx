@@ -53,6 +53,7 @@ type Props = {
   files: FileCenterItem[];
   canFileRead: boolean;
   canFileDownload: boolean;
+  canFileDelete: boolean;
   canDocumentUpload: boolean;
   auditLogs: Array<{
     id: string;
@@ -75,6 +76,7 @@ export function VisitDetailTabs({
   files,
   canFileRead,
   canFileDownload,
+  canFileDelete,
   canDocumentUpload,
 }: Props) {
   const boundUpload = uploadVisitDocumentAction.bind(null, visit.id);
@@ -174,6 +176,7 @@ export function VisitDetailTabs({
               <EntityFileList
                 items={files}
                 canDownload={canFileDownload}
+                canDelete={canFileDelete}
                 emptyMessage="Bu ziyarete bağlı dosya yok."
               />
             )}

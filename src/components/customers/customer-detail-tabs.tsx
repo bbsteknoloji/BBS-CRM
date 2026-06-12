@@ -105,6 +105,7 @@ type Props = {
   customerFiles: FileCenterItem[];
   canFileRead: boolean;
   canFileDownload: boolean;
+  canFileDelete: boolean;
   devices: CustomerDeviceRow[];
 };
 
@@ -126,6 +127,7 @@ export function CustomerDetailTabs({
   customerFiles,
   canFileRead,
   canFileDownload,
+  canFileDelete,
   devices,
 }: Props) {
   const addr = customer.addresses[0];
@@ -493,6 +495,7 @@ export function CustomerDetailTabs({
               <EntityFileList
                 items={customerFiles}
                 canDownload={canFileDownload}
+                canDelete={canFileDelete}
                 emptyMessage="Bu müşteriye ait dosya yok."
               />
             )}

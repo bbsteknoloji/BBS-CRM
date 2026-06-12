@@ -60,6 +60,7 @@ export default async function CustomerDetailPage({
   const canVisitWrite = hasPermission(user, "visit:write");
   const canFileRead = hasPermission(user, "file:read");
   const canFileDownload = hasPermission(user, "file:download");
+  const canFileDelete = hasPermission(user, "file:delete");
   const { id } = await params;
   const { tab } = await searchParams;
 
@@ -153,6 +154,7 @@ export default async function CustomerDetailPage({
             customerFiles={customerFiles}
             canFileRead={canFileRead}
             canFileDownload={canFileDownload}
+            canFileDelete={canFileDelete}
             serviceTickets={serviceTickets}
             canServiceRead={canServiceRead}
             canServiceWrite={canServiceWrite}

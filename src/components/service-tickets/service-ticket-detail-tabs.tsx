@@ -90,6 +90,7 @@ type Props = {
   files: FileCenterItem[];
   canFileRead: boolean;
   canFileDownload: boolean;
+  canFileDelete: boolean;
   canDocumentUpload: boolean;
 };
 
@@ -104,6 +105,7 @@ export function ServiceTicketDetailTabs({
   files,
   canFileRead,
   canFileDownload,
+  canFileDelete,
   canDocumentUpload,
 }: Props) {
   const boundUpload = uploadServiceTicketDocumentAction.bind(null, ticket.id);
@@ -324,6 +326,7 @@ export function ServiceTicketDetailTabs({
               <EntityFileList
                 items={files}
                 canDownload={canFileDownload}
+                canDelete={canFileDelete}
                 emptyMessage="Bu talebe bağlı dosya yok."
               />
             )}
