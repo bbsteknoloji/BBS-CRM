@@ -259,23 +259,23 @@ model User {
 
   userRoles UserRole[]
 
-  assignedCustomers Customer[] @relation("CustomerAssignedTo")
-  ownedContracts    Contract[] @relation("ContractOwner")
-  assignedTasks        Task[]           @relation("TaskAssignedTo")
-  createdTasks         Task[]           @relation("TaskCreatedBy")
+  assignedCustomers      Customer[]      @relation("CustomerAssignedTo")
+  ownedContracts         Contract[]      @relation("ContractOwner")
+  assignedTasks          Task[]          @relation("TaskAssignedTo")
+  createdTasks           Task[]          @relation("TaskCreatedBy")
   assignedServiceTickets ServiceTicket[] @relation("ServiceTicketAssignedTo")
-  visitRecords         VisitRecord[]    @relation("VisitRecordUser")
+  visitRecords           VisitRecord[]   @relation("VisitRecordUser")
 
-  activities       Activity[]
-  auditLogs        AuditLog[]
-  notifications    Notification[]
-  documents        Document[]
-  quotesCreated    Quote[]        @relation("QuoteCreatedBy")
-  quotesUpdated    Quote[]        @relation("QuoteUpdatedBy")
-  contractsCreated Contract[]     @relation("ContractCreatedBy")
-  contractsUpdated Contract[]     @relation("ContractUpdatedBy")
-  customersCreated Customer[]     @relation("CustomerCreatedBy")
-  customersUpdated Customer[]     @relation("CustomerUpdatedBy")
+  activities            Activity[]
+  auditLogs             AuditLog[]
+  notifications         Notification[]
+  documents             Document[]
+  quotesCreated         Quote[]         @relation("QuoteCreatedBy")
+  quotesUpdated         Quote[]         @relation("QuoteUpdatedBy")
+  contractsCreated      Contract[]      @relation("ContractCreatedBy")
+  contractsUpdated      Contract[]      @relation("ContractUpdatedBy")
+  customersCreated      Customer[]      @relation("CustomerCreatedBy")
+  customersUpdated      Customer[]      @relation("CustomerUpdatedBy")
   serviceTicketsCreated ServiceTicket[] @relation("ServiceTicketCreatedBy")
   serviceTicketsUpdated ServiceTicket[] @relation("ServiceTicketUpdatedBy")
   visitsCreated         VisitRecord[]   @relation("VisitRecordCreatedBy")
@@ -385,11 +385,11 @@ model Customer {
   updatedBy  User?    @relation("CustomerUpdatedBy", fields: [updatedById], references: [id], onDelete: SetNull)
   company    Company? @relation("CompanyCustomers", fields: [companyId], references: [id], onDelete: SetNull)
 
-  contacts   CustomerContact[]
-  devices    CustomerDevice[]
-  addresses  CustomerAddress[]
-  activities Activity[]
-  tasks      Task[]
+  contacts       CustomerContact[]
+  devices        CustomerDevice[]
+  addresses      CustomerAddress[]
+  activities     Activity[]
+  tasks          Task[]
   quotes         Quote[]
   contracts      Contract[]
   serviceTickets ServiceTicket[]
@@ -510,12 +510,12 @@ model Activity {
   metadata    Json?        @db.JsonB
   occurredAt  DateTime     @default(now()) @map("occurred_at") @db.Timestamptz(6)
 
-  userId     String? @map("user_id") @db.Uuid
-  quoteId          String? @map("quote_id") @db.Uuid
-  contractId       String? @map("contract_id") @db.Uuid
-  taskId           String? @map("task_id") @db.Uuid
-  serviceTicketId  String? @map("service_ticket_id") @db.Uuid
-  visitRecordId    String? @map("visit_record_id") @db.Uuid
+  userId          String? @map("user_id") @db.Uuid
+  quoteId         String? @map("quote_id") @db.Uuid
+  contractId      String? @map("contract_id") @db.Uuid
+  taskId          String? @map("task_id") @db.Uuid
+  serviceTicketId String? @map("service_ticket_id") @db.Uuid
+  visitRecordId   String? @map("visit_record_id") @db.Uuid
 
   createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt   DateTime  @updatedAt @map("updated_at") @db.Timestamptz(6)
@@ -523,9 +523,9 @@ model Activity {
   createdById String?   @map("created_by_id") @db.Uuid
   updatedById String?   @map("updated_by_id") @db.Uuid
 
-  customer Customer  @relation(fields: [customerId], references: [id], onDelete: Cascade)
-  user     User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
-  quote    Quote?    @relation(fields: [quoteId], references: [id], onDelete: SetNull)
+  customer      Customer       @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  user          User?          @relation(fields: [userId], references: [id], onDelete: SetNull)
+  quote         Quote?         @relation(fields: [quoteId], references: [id], onDelete: SetNull)
   contract      Contract?      @relation(fields: [contractId], references: [id], onDelete: SetNull)
   task          Task?          @relation(fields: [taskId], references: [id], onDelete: SetNull)
   serviceTicket ServiceTicket? @relation(fields: [serviceTicketId], references: [id], onDelete: SetNull)
@@ -620,10 +620,10 @@ model Product {
 // =============================================================================
 
 model Quote {
-  id         String      @id @default(uuid()) @db.Uuid
-  number     String      @unique @db.VarChar(30)
-  customerId String      @map("customer_id") @db.Uuid
-  title      String      @db.VarChar(255)
+  id            String      @id @default(uuid()) @db.Uuid
+  number        String      @unique @db.VarChar(30)
+  customerId    String      @map("customer_id") @db.Uuid
+  title         String      @db.VarChar(255)
   status        QuoteStatus @default(DRAFT)
   currency      Currency    @default(TRY)
   version       Int         @default(1)
@@ -698,15 +698,15 @@ model QuoteLineItem {
 }
 
 model QuoteRevision {
-  id        String   @id @default(uuid()) @db.Uuid
-  quoteId   String   @map("quote_id") @db.Uuid
+  id        String  @id @default(uuid()) @db.Uuid
+  quoteId   String  @map("quote_id") @db.Uuid
   version   Int
-  title     String   @db.VarChar(255)
-  subtotal  Decimal  @db.Decimal(18, 4)
-  taxTotal  Decimal  @map("tax_total") @db.Decimal(18, 4)
-  total     Decimal  @db.Decimal(18, 4)
-  notes     String?  @db.Text
-  lineItems Json     @map("line_items") @db.JsonB
+  title     String  @db.VarChar(255)
+  subtotal  Decimal @db.Decimal(18, 4)
+  taxTotal  Decimal @map("tax_total") @db.Decimal(18, 4)
+  total     Decimal @db.Decimal(18, 4)
+  notes     String? @db.Text
+  lineItems Json    @map("line_items") @db.JsonB
 
   createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
   createdById String?  @map("created_by_id") @db.Uuid
@@ -719,13 +719,13 @@ model QuoteRevision {
 }
 
 model QuotePdfVersion {
-  id           String   @id @default(uuid()) @db.Uuid
-  quoteId      String   @map("quote_id") @db.Uuid
-  quoteVersion Int      @map("quote_version")
-  storageKey   String   @map("storage_key") @db.VarChar(500)
-  relativePath String   @map("relative_path") @db.VarChar(500)
-  sizeBytes    Int      @map("size_bytes")
-  mimeType     String   @default("application/pdf") @map("mime_type") @db.VarChar(127)
+  id           String @id @default(uuid()) @db.Uuid
+  quoteId      String @map("quote_id") @db.Uuid
+  quoteVersion Int    @map("quote_version")
+  storageKey   String @map("storage_key") @db.VarChar(500)
+  relativePath String @map("relative_path") @db.VarChar(500)
+  sizeBytes    Int    @map("size_bytes")
+  mimeType     String @default("application/pdf") @map("mime_type") @db.VarChar(127)
 
   createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
   createdById String?  @map("created_by_id") @db.Uuid
@@ -757,9 +757,9 @@ model Contract {
   autoRenew         Boolean   @default(false) @map("auto_renew")
   renewalNoticeDays Int       @default(30) @map("renewal_notice_days")
 
-  subtotal Decimal @default(0) @db.Decimal(18, 4)
-  taxTotal Decimal @default(0) @map("tax_total") @db.Decimal(18, 4)
-  total    Decimal @default(0) @db.Decimal(18, 4)
+  subtotal      Decimal @default(0) @db.Decimal(18, 4)
+  taxTotal      Decimal @default(0) @map("tax_total") @db.Decimal(18, 4)
+  total         Decimal @default(0) @db.Decimal(18, 4)
   notes         String? @db.Text
   terms         String? @db.Text
   invoiceNumber String  @default("") @map("invoice_number") @db.VarChar(100)
@@ -785,10 +785,10 @@ model Contract {
   updatedBy      User?      @relation("ContractUpdatedBy", fields: [updatedById], references: [id], onDelete: SetNull)
   company        Company?   @relation("CompanyContracts", fields: [companyId], references: [id], onDelete: SetNull)
 
-  lineItems   ContractLineItem[]
+  lineItems       ContractLineItem[]
   contractDevices ContractDevice[]
-  renewals    ContractRenewal[]
-  pdfVersions ContractPdfVersion[]
+  renewals        ContractRenewal[]
+  pdfVersions     ContractPdfVersion[]
   activities      Activity[]
   tasks           Task[]
   serviceTickets  ServiceTicket[]
@@ -823,16 +823,16 @@ model ServiceTicket {
   assignedUserId String?             @map("assigned_user_id") @db.Uuid
 
   // Sistem / Cihaz bilgileri
-  systemType   SystemType? @map("system_type")
-  brand        String?     @db.VarChar(100)
-  model        String?     @db.VarChar(100)
-  serialNo     String?     @map("serial_no") @db.VarChar(100)
-  location     String?     @db.VarChar(255)
-  inventoryNo  String?     @map("inventory_no") @db.VarChar(100)
+  systemType  SystemType? @map("system_type")
+  brand       String?     @db.VarChar(100)
+  model       String?     @db.VarChar(100)
+  serialNo    String?     @map("serial_no") @db.VarChar(100)
+  location    String?     @db.VarChar(255)
+  inventoryNo String?     @map("inventory_no") @db.VarChar(100)
 
   // Teknik içerik
-  workDone   String? @map("work_done") @db.Text
-  techNotes  String? @map("tech_notes") @db.Text
+  workDone  String? @map("work_done") @db.Text
+  techNotes String? @map("tech_notes") @db.Text
 
   // Finansal
   currency Currency @default(TRY)
@@ -915,11 +915,11 @@ model VisitRecord {
   contractId      String?   @map("contract_id") @db.Uuid
   serviceTicketId String?   @map("service_ticket_id") @db.Uuid
   userId          String    @map("user_id") @db.Uuid
-  visitDate     DateTime  @map("visit_date") @db.Date
-  description   String    @db.Text
-  result        String?   @db.Text
-  nextVisitDate DateTime? @map("next_visit_date") @db.Date
-  companyId     String?   @map("company_id") @db.Uuid
+  visitDate       DateTime  @map("visit_date") @db.Date
+  description     String    @db.Text
+  result          String?   @db.Text
+  nextVisitDate   DateTime? @map("next_visit_date") @db.Date
+  companyId       String?   @map("company_id") @db.Uuid
 
   createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt   DateTime  @updatedAt @map("updated_at") @db.Timestamptz(6)
@@ -931,9 +931,9 @@ model VisitRecord {
   contract      Contract?      @relation(fields: [contractId], references: [id], onDelete: SetNull)
   serviceTicket ServiceTicket? @relation(fields: [serviceTicketId], references: [id], onDelete: SetNull)
   user          User           @relation("VisitRecordUser", fields: [userId], references: [id], onDelete: Restrict)
-  createdBy User?     @relation("VisitRecordCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
-  updatedBy User?     @relation("VisitRecordUpdatedBy", fields: [updatedById], references: [id], onDelete: SetNull)
-  company   Company?  @relation("CompanyVisitRecords", fields: [companyId], references: [id], onDelete: SetNull)
+  createdBy     User?          @relation("VisitRecordCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+  updatedBy     User?          @relation("VisitRecordUpdatedBy", fields: [updatedById], references: [id], onDelete: SetNull)
+  company       Company?       @relation("CompanyVisitRecords", fields: [companyId], references: [id], onDelete: SetNull)
 
   activities Activity[]
 
@@ -1002,13 +1002,13 @@ model ContractRenewal {
 }
 
 model ContractPdfVersion {
-  id           String   @id @default(uuid()) @db.Uuid
-  contractId   String   @map("contract_id") @db.Uuid
-  version      Int      @default(1)
-  storageKey   String   @map("storage_key") @db.VarChar(500)
-  relativePath String   @map("relative_path") @db.VarChar(500)
-  sizeBytes    Int      @map("size_bytes")
-  mimeType     String   @default("application/pdf") @map("mime_type") @db.VarChar(127)
+  id           String @id @default(uuid()) @db.Uuid
+  contractId   String @map("contract_id") @db.Uuid
+  version      Int    @default(1)
+  storageKey   String @map("storage_key") @db.VarChar(500)
+  relativePath String @map("relative_path") @db.VarChar(500)
+  sizeBytes    Int    @map("size_bytes")
+  mimeType     String @default("application/pdf") @map("mime_type") @db.VarChar(127)
 
   createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
   createdById String?  @map("created_by_id") @db.Uuid
@@ -1134,24 +1134,24 @@ model NumberSequence {
 }
 
 model Company {
-  id        String   @id @default(uuid()) @db.Uuid
-  name      String   @db.VarChar(255)
-  logoUrl   String?  @map("logo_url") @db.VarChar(500)
-  email     String?  @db.VarChar(255)
-  phone     String?  @db.VarChar(50)
-  address   String?  @db.Text
-  isActive  Boolean  @default(true) @map("is_active")
+  id       String  @id @default(uuid()) @db.Uuid
+  name     String  @db.VarChar(255)
+  logoUrl  String? @map("logo_url") @db.VarChar(500)
+  email    String? @db.VarChar(255)
+  phone    String? @db.VarChar(50)
+  address  String? @db.Text
+  isActive Boolean @default(true) @map("is_active")
 
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
 
   users          User[]
-  customers      Customer[]      @relation("CompanyCustomers")
-  contracts      Contract[]      @relation("CompanyContracts")
-  quotes         Quote[]         @relation("CompanyQuotes")
-  serviceTickets ServiceTicket[] @relation("CompanyServiceTickets")
-  tasks          Task[]          @relation("CompanyTasks")
-  visitRecords   VisitRecord[]   @relation("CompanyVisitRecords")
+  customers      Customer[]       @relation("CompanyCustomers")
+  contracts      Contract[]       @relation("CompanyContracts")
+  quotes         Quote[]          @relation("CompanyQuotes")
+  serviceTickets ServiceTicket[]  @relation("CompanyServiceTickets")
+  tasks          Task[]           @relation("CompanyTasks")
+  visitRecords   VisitRecord[]    @relation("CompanyVisitRecords")
   numberSeqs     NumberSequence[] @relation("CompanyNumberSequences")
 
   @@map("companies")
