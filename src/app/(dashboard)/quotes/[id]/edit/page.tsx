@@ -26,7 +26,7 @@ export default async function EditQuotePage({
   const [quote, customers, products] = await Promise.all([
     getQuoteDetail(user, id),
     listCustomersForQuoteSelect(user),
-    listActiveProducts(),
+    listActiveProducts(user),
   ]);
 
   if (!quote || !isQuoteEditable(quote.status)) notFound();

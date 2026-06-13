@@ -23,7 +23,7 @@ export default async function NewContractPage({ searchParams }: Props) {
   const [customers, quotes, products] = await Promise.all([
     listCustomersForContractSelect(user),
     listQuotesForContractSelect(user, sp.customerId),
-    listActiveProducts(),
+    listActiveProducts(user),
   ]);
 
   const productOptions = products.map((p) => ({

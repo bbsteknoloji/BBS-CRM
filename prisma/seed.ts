@@ -41,6 +41,8 @@ const PERMISSIONS: Array<{
   { slug: "service:assign", name: "Servis talebi ata", module: "service" },
   { slug: "service:close", name: "Servis talebi kapat", module: "service" },
   { slug: "service:delete", name: "Servis talebi sil", module: "service" },
+  { slug: "service:pdf", name: "Servis PDF oluştur", module: "service" },
+  { slug: "service:cost", name: "Servis maliyet yönetimi", module: "service" },
   { slug: "visit:read", name: "Saha ziyareti görüntüle", module: "visit" },
   { slug: "visit:write", name: "Saha ziyareti düzenle", module: "visit" },
   { slug: "task:read", name: "Görev görüntüle", module: "task" },
@@ -65,6 +67,7 @@ const PERMISSIONS: Array<{
   { slug: "user:read", name: "Kullanıcı görüntüle", module: "user" },
   { slug: "user:manage", name: "Kullanıcı yönet", module: "user" },
   { slug: "audit:read", name: "Denetim kaydı görüntüle", module: "audit" },
+  { slug: "company:manage", name: "Firma ayarlarını yönet", module: "company" },
 ];
 
 const ROLE_DEFINITIONS: Array<{
@@ -76,8 +79,22 @@ const ROLE_DEFINITIONS: Array<{
   {
     code: RoleCode.SUPER_ADMIN,
     name: "Süper Yönetici",
-    description: "Tam sistem erişimi",
+    description: "Tam platform erişimi — tüm firmaları yönetir",
     permissions: "*",
+  },
+  {
+    code: RoleCode.COMPANY_ADMIN,
+    name: "Firma Yöneticisi",
+    description: "Firmasında tam yetki — kullanıcı ve ayar yönetimi dahil",
+    permissions: PERMISSIONS.map((p) => p.slug).filter((s) => s !== "company:manage"),
+  },
+  {
+    code: RoleCode.MANAGER,
+    name: "Müdür",
+    description: "Tüm operasyonel yetkiler — kullanıcı yönetimi hariç",
+    permissions: PERMISSIONS.map((p) => p.slug).filter(
+      (s) => s !== "user:manage" && s !== "company:manage"
+    ),
   },
   {
     code: RoleCode.ADMIN,
@@ -406,7 +423,7 @@ async function seedSettings() {
   }
 }
 
-async function seedSampleProducts() {
+async function seedSampleProducts(companyId: string | null) {
   const samples = [
     {
       sku: "SRV-CONSULT-001",
@@ -435,22 +452,27 @@ async function seedSampleProducts() {
   ];
 
   for (const p of samples) {
-    await prisma.product.upsert({
-      where: { sku: p.sku },
-      update: {
-        name: p.name,
-        unitPrice: p.unitPrice,
-        taxRate: p.taxRate,
-      },
-      create: {
-        sku: p.sku,
-        name: p.name,
-        type: p.type,
-        unit: p.unit,
-        unitPrice: p.unitPrice,
-        taxRate: p.taxRate,
-      },
+    const existing = await prisma.product.findFirst({
+      where: { sku: p.sku, companyId: companyId ?? undefined },
     });
+    if (existing) {
+      await prisma.product.update({
+        where: { id: existing.id },
+        data: { name: p.name, unitPrice: p.unitPrice, taxRate: p.taxRate },
+      });
+    } else {
+      await prisma.product.create({
+        data: {
+          sku: p.sku,
+          name: p.name,
+          type: p.type,
+          unit: p.unit,
+          unitPrice: p.unitPrice,
+          taxRate: p.taxRate,
+          companyId: companyId ?? undefined,
+        },
+      });
+    }
   }
 }
 
@@ -1026,7 +1048,7 @@ async function main() {
   console.log(`✓ ${DEFAULT_SETTINGS.length} ayar`);
 
   if (process.env.NODE_ENV !== "production") {
-    await seedSampleProducts();
+    await seedSampleProducts(companyId);
     console.log("✓ Örnek ürün kataloğu (dev)");
 
     const sales = await seedDemoSalesUser(admin.id, companyId);

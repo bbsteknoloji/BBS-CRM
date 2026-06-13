@@ -41,8 +41,16 @@ export function decodeProductCursor(raw?: string): ProductCursor | null {
   return null;
 }
 
-function buildListWhere(query: ProductListQuery): Prisma.ProductWhereInput {
-  const where: Prisma.ProductWhereInput = { deletedAt: null };
+function tenantWhere(user: SessionUser): Prisma.ProductWhereInput {
+  if (user.roles.includes("SUPER_ADMIN") && !user.companyId) return {};
+  return { companyId: user.companyId ?? undefined };
+}
+
+function buildListWhere(
+  user: SessionUser,
+  query: ProductListQuery
+): Prisma.ProductWhereInput {
+  const where: Prisma.ProductWhereInput = { deletedAt: null, ...tenantWhere(user) };
 
   if (query.isActive === "true") where.isActive = true;
   if (query.isActive === "false") where.isActive = false;
@@ -59,8 +67,8 @@ function buildListWhere(query: ProductListQuery): Prisma.ProductWhereInput {
   return where;
 }
 
-export async function listProducts(_user: SessionUser, query: ProductListQuery) {
-  const where = buildListWhere(query);
+export async function listProducts(user: SessionUser, query: ProductListQuery) {
+  const where = buildListWhere(user, query);
   const limit = query.limit;
   const cursor = decodeProductCursor(query.cursor);
 
@@ -115,9 +123,11 @@ export async function listProducts(_user: SessionUser, query: ProductListQuery) 
   };
 }
 
-export async function getProductById(id: string) {
+export async function getProductById(id: string, companyId?: string | null) {
+  const where: { id: string; deletedAt: null; companyId?: string } = { id, deletedAt: null };
+  if (companyId !== undefined) where.companyId = companyId ?? undefined;
   const row = await prisma.product.findFirst({
-    where: { id, deletedAt: null },
+    where,
     select: {
       id: true,
       sku: true,
@@ -153,6 +163,7 @@ export async function createProduct(user: SessionUser, input: ProductFormInput) 
       currency: input.currency,
       taxRate: toDecimalString(input.taxRate),
       isActive: input.isActive,
+      companyId: user.companyId ?? undefined,
       createdById: user.id,
       updatedById: user.id,
     },
@@ -175,8 +186,9 @@ export async function updateProduct(
   productId: string,
   input: ProductFormInput
 ) {
+  const tenantFilter = tenantWhere(user);
   const existing = await prisma.product.findFirst({
-    where: { id: productId, deletedAt: null },
+    where: { id: productId, deletedAt: null, ...tenantFilter },
     select: { id: true },
   });
   if (!existing) return null;
@@ -209,8 +221,9 @@ export async function updateProduct(
 }
 
 export async function deleteProduct(user: SessionUser, productId: string) {
+  const tenantFilter = tenantWhere(user);
   const existing = await prisma.product.findFirst({
-    where: { id: productId, deletedAt: null },
+    where: { id: productId, deletedAt: null, ...tenantFilter },
     select: { id: true, sku: true, name: true },
   });
   if (!existing) return null;
@@ -235,10 +248,11 @@ export async function deleteProduct(user: SessionUser, productId: string) {
   return true;
 }
 
-/** Teklif / sözleşme kalem seçimi */
-export async function listActiveProducts() {
+/** Teklif / sözleşme kalem seçimi — tenant izolasyonlu */
+export async function listActiveProducts(user?: SessionUser) {
+  const tenantFilter = user ? tenantWhere(user) : {};
   return prisma.product.findMany({
-    where: { deletedAt: null, isActive: true },
+    where: { deletedAt: null, isActive: true, ...tenantFilter },
     select: {
       id: true,
       sku: true,
@@ -266,8 +280,9 @@ export async function quickUpdateProductFields(
     isActive: boolean;
   }
 ) {
+  const tenantFilter = tenantWhere(user);
   const existing = await prisma.product.findFirst({
-    where: { id: productId, deletedAt: null },
+    where: { id: productId, deletedAt: null, ...tenantFilter },
     select: { id: true, sku: true, name: true },
   });
   if (!existing) return null;

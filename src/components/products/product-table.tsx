@@ -205,9 +205,11 @@ function EditRow({
 function DisplayRow({
   row,
   onEdit,
+  canEdit,
 }: {
   row: ProductListRow;
   onEdit: () => void;
+  canEdit: boolean;
 }) {
   return (
     <TableRow className="premium-table-row group border-border/40">
@@ -242,35 +244,37 @@ function DisplayRow({
           <Badge variant="secondary">Pasif</Badge>
         )}
       </TableCell>
-      <TableCell>
-        <div className="flex items-center gap-0.5 opacity-0 transition-opacity group-hover:opacity-100">
-          <Button
-            size="icon"
-            variant="ghost"
-            className="h-7 w-7"
-            onClick={onEdit}
-            title="Satırda düzenle"
-          >
-            <Pencil className="h-3.5 w-3.5" />
-          </Button>
-          <Button
-            size="icon"
-            variant="ghost"
-            className="h-7 w-7"
-            asChild
-            title="Tam form"
-          >
-            <Link href={`/products/${row.id}/edit`}>
-              <ExternalLink className="h-3.5 w-3.5" />
-            </Link>
-          </Button>
-        </div>
-      </TableCell>
+      {canEdit && (
+        <TableCell>
+          <div className="flex items-center gap-0.5 opacity-0 transition-opacity group-hover:opacity-100">
+            <Button
+              size="icon"
+              variant="ghost"
+              className="h-7 w-7"
+              onClick={onEdit}
+              title="Satırda düzenle"
+            >
+              <Pencil className="h-3.5 w-3.5" />
+            </Button>
+            <Button
+              size="icon"
+              variant="ghost"
+              className="h-7 w-7"
+              asChild
+              title="Tam form"
+            >
+              <Link href={`/products/${row.id}/edit`}>
+                <ExternalLink className="h-3.5 w-3.5" />
+              </Link>
+            </Button>
+          </div>
+        </TableCell>
+      )}
     </TableRow>
   );
 }
 
-export function ProductTable({ data }: { data: ProductListRow[] }) {
+export function ProductTable({ data, canEdit = false }: { data: ProductListRow[]; canEdit?: boolean }) {
   const [rows, setRows] = useState<ProductListRow[]>(data);
   const [editingId, setEditingId] = useState<string | null>(null);
 
@@ -294,7 +298,7 @@ export function ProductTable({ data }: { data: ProductListRow[] }) {
               <TableHead>KDV</TableHead>
               <TableHead>Döviz</TableHead>
               <TableHead>Durum</TableHead>
-              <TableHead className="w-[88px]" />
+              {canEdit && <TableHead className="w-[88px]" />}
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -321,6 +325,7 @@ export function ProductTable({ data }: { data: ProductListRow[] }) {
                     key={row.id}
                     row={row}
                     onEdit={() => setEditingId(row.id)}
+                    canEdit={canEdit}
                   />
                 )
               )

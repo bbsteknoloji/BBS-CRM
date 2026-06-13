@@ -16,7 +16,7 @@ export default async function NewQuotePage() {
 
   const [customers, products] = await Promise.all([
     listCustomersForQuoteSelect(user),
-    listActiveProducts(),
+    listActiveProducts(user),
   ]);
 
   const productOptions = products.map((p) => ({

@@ -30,6 +30,7 @@ async function ProductListContent({
   searchParams: Record<string, string | string[] | undefined>;
 }) {
   const user = await requirePermission("product:read");
+  const canEdit = hasPermission(user, "product:update");
 
   const raw = {
     q: typeof searchParams.q === "string" ? searchParams.q : undefined,
@@ -74,7 +75,7 @@ async function ProductListContent({
           />
         ) : (
           <>
-            <ProductTable data={list.items} />
+            <ProductTable data={list.items} canEdit={canEdit} />
             <ProductListPagination
               total={list.total}
               shown={list.items.length}

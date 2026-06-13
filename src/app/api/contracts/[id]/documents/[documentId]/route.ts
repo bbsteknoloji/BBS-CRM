@@ -29,6 +29,10 @@ export async function GET(_request: Request, { params }: Params) {
   }
 
   const { documentId } = await params;
+  const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+  if (!UUID_RE.test(documentId)) {
+    return NextResponse.json({ error: "Not found" }, { status: 404 });
+  }
   const doc = await getContractDocumentForDownload(user, documentId);
   if (!doc) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });

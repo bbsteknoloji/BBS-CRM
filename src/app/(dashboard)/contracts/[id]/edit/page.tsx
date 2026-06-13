@@ -31,7 +31,7 @@ export default async function EditContractPage({ params }: Props) {
   const [customers, quotes, products, deviceIds] = await Promise.all([
     listCustomersForContractSelect(user),
     listQuotesForContractSelect(user, contract.customer.id),
-    listActiveProducts(),
+    listActiveProducts(user),
     listContractDeviceIds(user, id),
   ]);
 
